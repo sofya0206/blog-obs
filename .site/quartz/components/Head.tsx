@@ -88,7 +88,6 @@ export default (() => {
         />
         <style data-persist dangerouslySetInnerHTML={{ __html: fontFaces }} />
 
-        <meta property="og:site_name" content={cfg.pageTitle} />
         <meta property="og:locale" content="ru_RU" />
         <meta property="og:title" content={title} />
         <meta property="og:type" content="website" />
