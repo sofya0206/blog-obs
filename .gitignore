@@ -13,3 +13,7 @@ node_modules/
 *.session-journal
 *.pem
 *.key
+
+# Generated build caches
+.quartz-cache/
+*.tsbuildinfo
