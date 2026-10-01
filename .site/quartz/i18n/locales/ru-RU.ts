@@ -22,7 +22,7 @@ export default {
       quote: "Цитата",
     },
     backlinks: {
-      title: "Ссылаются сюда",
+      title: "Связи",
       noBacklinksFound: "Пока никто не ссылается",
     },
     themeToggle: {
