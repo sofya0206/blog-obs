@@ -2032,6 +2032,15 @@ a.b-card-cta {
 @include offbrand.apply;
 @include ui.apply;
 
+iframe.obsidian-canvas {
+  display: block;
+  width: 100%;
+  height: clamp(480px, 75vh, 760px);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-cards);
+  background: white;
+}
+
 // Personal homepage: plain Markdown content inside the original blog layout.
 [data-slug="index"] {
   .home-heading { margin: 0 0 24px; }
