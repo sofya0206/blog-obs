@@ -707,7 +707,7 @@ a.page-title {
     align-items: center;
     min-height: 32px;
     padding: 0 0.6rem;
-    border-radius: 4px;
+    border-radius: 0;
     color: var(--soft);
     font-size: 0.86rem;
     font-weight: 500;
@@ -720,6 +720,10 @@ a.page-title {
 
   .explorer-content ul li > a {
     text-decoration: none;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   .explorer-content ul li > a.active {
@@ -765,8 +769,10 @@ a.page-title {
 @media (hover: hover) {
   .explorer .explorer-content ul li > a:not(.active):hover,
   .explorer .folder-container:hover {
-    background: var(--hover);
+    background: transparent;
     color: var(--ink);
+    text-decoration: underline;
+    text-underline-offset: 4px;
   }
 
   .explorer .folder-container:hover .folder-icon {

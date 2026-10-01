@@ -117,7 +117,7 @@ export default (() => {
         <link rel="manifest" href="/blog-obs/static/site.webmanifest" />
 
         {/* Один тег с id: лик выбирает переключатель (canon §12.4) */}
-        <meta name="theme-color" id="meta-theme-color" content="#fafafa" />
+        <meta name="theme-color" id="meta-theme-color" content="#e5e4e0" />
         <meta name="color-scheme" content="light dark" />
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-capable" content="yes" />

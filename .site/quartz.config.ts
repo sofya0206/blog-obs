@@ -31,14 +31,14 @@ const config: QuartzConfig = {
       // Источник истины — токены в quartz/styles/custom.scss; значения здесь им равны.
       colors: {
         lightMode: {
-          light: "#fafafa", // canvas
-          lightgray: "#d8d8d8", // hairline
-          gray: "#616161", // slate
+          light: "#e5e4e0", // canvas
+          lightgray: "#bfbebe", // hairline
+          gray: "#565653", // slate
           darkgray: "#1d1d1d", // soft — основной текст абзацев
           dark: "#1d1d1d", // ink — заголовки
           secondary: "#1d1d1d", // ссылки — тот же полюс, что и текст
-          tertiary: "#616161", // tertiary
-          highlight: "#efefef", // inset
+          tertiary: "#565653", // tertiary
+          highlight: "#cdcdc9", // inset
           textHighlight: "rgba(13, 13, 13, 0.22)", // focus-ring
         },
         darkMode: {

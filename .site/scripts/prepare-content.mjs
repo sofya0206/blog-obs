@@ -43,7 +43,7 @@ export async function prepareContent({ clean = true } = {}) {
       if (entry.isDirectory()) await copy(source, rel)
       else if (
         entry.isFile() &&
-        /\.(md|png|jpe?g|gif|webp|svg|pdf|mp3|mp4|webm|ogg|wav)$/i.test(entry.name)
+        /\.(md|canvas|png|jpe?g|gif|webp|svg|pdf|mp3|mp4|webm|ogg|wav)$/i.test(entry.name)
       ) {
         wanted.add(target)
         await fs.mkdir(path.dirname(target), { recursive: true })
@@ -55,6 +55,13 @@ export async function prepareContent({ clean = true } = {}) {
           const heading = parsed.content.match(/^# ([^\n]+)\n/m)
           if (heading && [name, parsed.data.title].includes(heading[1].trim())) {
             parsed.content = parsed.content.replace(heading[0], "")
+          }
+          // The public copy of the original report keeps its wording. Its links point
+          // into a separate private vault, so render their labels as text on the site.
+          if (rel === path.join("Проекты", "Fashion", "Анализ кейса.md")) {
+            parsed.content = parsed.content.replace(/\[\[([^\]|]+)(?:\|([^\]]+))?\]\]/g, (_, target, label) =>
+              label ?? path.basename(target),
+            )
           }
           // A rename in Obsidian is a rename on the site, even with a stale title property.
           if (rel !== "Главная.md") parsed.data.title = name
