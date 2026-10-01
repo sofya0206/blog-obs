@@ -1483,6 +1483,17 @@ article img {
   color: var(--ink);
 }
 
+// Long display equations (for example, the potential formula with an underbrace)
+// must scroll inside the article instead of widening the page on mobile.
+.katex-display {
+  display: block;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-block: 0.15rem;
+}
+
 /* ---------- Навигационный прогресс SPA ------------------------------------- */
 
 .navigation-progress {
