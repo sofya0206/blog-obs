@@ -2027,3 +2027,46 @@ a.b-card-cta {
 
 @include offbrand.apply;
 @include ui.apply;
+
+// Personal homepage: plain Markdown content inside the original blog layout.
+[data-slug="index"] {
+  .home-heading { margin: 0 0 24px; }
+  .home-name {
+    margin: 0 0 24px;
+    font: 700 clamp(44px, 6.2vw, 86px)/0.98 var(--headerFont);
+    letter-spacing: -0.035em;
+    text-transform: uppercase;
+    color: var(--ink);
+    span { display: block; }
+  }
+  .home-directions {
+    margin: 0;
+    color: var(--slate);
+    font: 400 15px/1.6 var(--bodyFont);
+  }
+  article.home-page {
+    padding: 0 0 40px;
+    border-bottom: 1px solid var(--hairline);
+    > p:first-child { max-width: 36rem; margin: 0 0 32px; font-size: 20px; line-height: 1.6; }
+    > p:last-child {
+      display: flex; flex-wrap: wrap; gap: 12px; margin: 0;
+      > a.external {
+        display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+        min-height: 48px; box-sizing: border-box; padding: 12px 20px;
+        border: 1px solid var(--strong); border-radius: var(--radius-buttons);
+        background: transparent; color: var(--ink); text-decoration: none;
+        font: 500 15px/1.4 var(--bodyFont);
+        transition: background-color var(--motion-fast), color var(--motion-fast);
+        svg { width: 16px; height: 16px; stroke: currentColor; }
+        &:first-child { background: var(--selected); color: var(--on-selected); border-color: var(--selected); }
+        &:hover { background: var(--selected); color: var(--on-selected); border-color: var(--selected); }
+        &:first-child:hover { background: var(--strong); border-color: var(--strong); }
+      }
+    }
+  }
+  @media (max-width: 800px) {
+    .home-name { font-size: clamp(40px, 11vw, 64px); margin-bottom: 20px; }
+    .home-directions { max-width: 24rem; font-size: 14px; }
+    article.home-page { padding-bottom: 32px; > p:first-child { font-size: 17px; margin-bottom: 24px; } }
+  }
+}

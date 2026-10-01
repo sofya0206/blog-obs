@@ -51,7 +51,7 @@ export default (() => {
       name: cfg.pageTitle,
       url: url.toString(),
       inLanguage: "ru",
-      author: { "@type": "Person", name: "Софья Гулаева" },
+      author: { "@type": "Person", name: "Гуляева Софья" },
     })
 
     return (
@@ -60,7 +60,7 @@ export default (() => {
         <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
         <title>{title}</title>
         <meta name="description" content={description} />
-        <meta name="author" content="Софья Гулаева" />
+        <meta name="author" content="Гуляева Софья" />
         {noindex && <meta name="robots" content="noindex, follow" />}
         {!noindex && cfg.baseUrl && <link rel="canonical" href={socialUrl} />}
 
