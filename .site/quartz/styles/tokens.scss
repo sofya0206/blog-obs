@@ -1,0 +1,88 @@
+// OFF+BRAND primitives, semantic theme pairs, and shared control geometry.
+@mixin apply {
+  html:root {
+    --color-parchment: #e5e4e0;
+    --color-ink: #1d1d1d;
+    --color-paper: #ffffff;
+    --color-ash: #bfbebe;
+    --color-stone: #cdcdc9;
+    --color-muted: #565653;
+    --control-size: 44px;
+    --space-1: 4px;
+    --space-2: 8px;
+    --space-3: 12px;
+    --space-4: 16px;
+    --space-6: 24px;
+    --space-8: 32px;
+    --motion-fast: 150ms;
+    --motion-ease: cubic-bezier(0.16, 1, 0.3, 1);
+    --font-editorial: "Inter", "Inter Fallback", sans-serif;
+    --text-caption: 12px;
+    --text-body-sm: 15px;
+    --text-body: 18px;
+    --tracking-caption: 0.05em;
+    --tracking-display: 0.013em;
+    --leading-body: 1.6;
+    --spacing-unit: 4px;
+    --radius-cards: 0px;
+    --radius-links: 10px;
+    --radius-inputs: 10px;
+    --radius-buttons: 10px;
+    --headerFont: var(--font-editorial);
+    --titleFont: var(--font-editorial);
+    --bodyFont: var(--font-editorial);
+  }
+  html:root,
+  html:root[data-theme="titan"] {
+    --canvas: var(--color-parchment);
+    --ink: var(--color-ink);
+    --soft: var(--color-ink);
+    --surface: var(--color-paper);
+    --inset: var(--color-stone);
+    --hover: var(--color-stone);
+    --zebra: var(--color-parchment);
+    --hairline: var(--color-ash);
+    --strong: var(--color-muted);
+    --slate: var(--color-muted);
+    --tertiary: var(--color-muted);
+    --focus-ring: var(--color-ink);
+    --light: var(--color-parchment);
+    --lightgray: var(--color-ash);
+    --gray: var(--color-muted);
+    --darkgray: var(--color-ink);
+    --dark: var(--color-ink);
+    --secondary: var(--color-ink);
+    --highlight: var(--color-stone);
+    --on-selected: var(--color-parchment);
+    --selected: var(--color-ink);
+    --scrim: rgb(29 29 29 / 48%);
+    --overlay-shadow: 0 12px 36px rgb(29 29 29 / 14%);
+    color-scheme: light;
+  }
+  html:root[data-theme="obsidian"] {
+    --canvas: var(--color-ink);
+    --ink: var(--color-parchment);
+    --soft: var(--color-parchment);
+    --surface: #272727;
+    --inset: #333333;
+    --hover: #333333;
+    --zebra: #272727;
+    --hairline: #565653;
+    --strong: var(--color-ash);
+    --slate: var(--color-ash);
+    --tertiary: var(--color-ash);
+    --focus-ring: var(--color-parchment);
+    --light: var(--color-ink);
+    --lightgray: #565653;
+    --gray: var(--color-ash);
+    --darkgray: var(--color-parchment);
+    --dark: var(--color-parchment);
+    --secondary: var(--color-parchment);
+    --highlight: #333333;
+    --on-selected: var(--color-ink);
+    --selected: var(--color-parchment);
+    --scrim: rgb(0 0 0 / 64%);
+    --overlay-shadow: 0 12px 36px rgb(0 0 0 / 32%);
+    color-scheme: dark;
+  }
+}
