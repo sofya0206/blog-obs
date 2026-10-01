@@ -17,6 +17,11 @@ async function copy(dir, relative = "") {
       await fs.mkdir(path.dirname(target), { recursive: true })
       if (entry.name.endsWith(".md")) {
         let content = await fs.readFile(source, "utf8")
+        // Obsidian keeps its readable Markdown heading; Quartz renders the title itself.
+        const heading = content.match(/^# ([^\n]+)\n/m)
+        if (heading?.[1].trim() === path.basename(rel, ".md")) {
+          content = content.replace(heading[0], "")
+        }
         await fs.writeFile(target, content)
       } else await fs.copyFile(source, target)
     }

@@ -114,7 +114,14 @@ export const CrawlLinks: QuartzTransformerPlugin<Partial<Options>> = (userOpts) 
                   // url.resolve is considered legacy
                   // WHATWG equivalent https://nodejs.dev/en/api/v18/url/#urlresolvefrom-to
                   const url = new URL(dest, "https://base.com/" + stripSlashes(curSlug, true))
-                  const canonicalDest = url.pathname
+                  // Keep graph/backlink identifiers independent of the Pages URL prefix.
+                  const basePath = new URL(
+                    `https://${ctx.cfg.configuration.baseUrl ?? "base.com"}`,
+                  ).pathname.replace(/\/$/, "")
+                  const canonicalDest =
+                    basePath && url.pathname.startsWith(`${basePath}/`)
+                      ? url.pathname.slice(basePath.length)
+                      : url.pathname
                   let [destCanonical, _destAnchor] = splitAnchor(canonicalDest)
                   if (destCanonical.endsWith("/")) {
                     destCanonical += "index"
