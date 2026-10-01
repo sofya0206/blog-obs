@@ -19,6 +19,16 @@ export const sharedPageComponents: SharedLayout = {
   afterBody: [
     Component.ConditionalRender({
       component: Component.RecentNotes({
+        title: "Недавнее",
+        limit: 3,
+        showTags: true,
+        pinned: ["Проекты/Исследования/Психометрика-как-основа-маркетинговой-стратегии"],
+        filter: (f) => Boolean(f.slug?.startsWith("Заметки/") || f.slug?.startsWith("Проекты/Исследования/")),
+      }),
+      condition: (page) => isIndex(page.fileData.slug),
+    }),
+    Component.ConditionalRender({
+      component: Component.RecentNotes({
         title: "Из дневника",
         limit: 3,
         showTags: true,

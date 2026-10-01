@@ -2101,6 +2101,53 @@ iframe.obsidian-canvas {
       color: var(--slate);
       > a[role="anchor"] { display: none; }
     }
+    > .callout[data-callout="research"] {
+      margin: 0 0 24px;
+      padding: 24px;
+      border: 1px solid var(--hairline);
+      border-radius: var(--radius-cards);
+      background: var(--surface);
+      color: var(--ink);
+      box-shadow: none;
+
+      .callout-title {
+        padding: 0;
+        color: var(--slate);
+        font: 600 11px/1.5 var(--bodyFont);
+        letter-spacing: .09em;
+        text-transform: uppercase;
+      }
+      .callout-icon { display: none; }
+      .callout-content {
+        margin: 0;
+        > p { margin: 16px 0 0; }
+        > p:first-child {
+          max-width: 30rem;
+          font-size: clamp(20px, 2.2vw, 26px);
+          line-height: 1.25;
+          letter-spacing: -.025em;
+        }
+        > p:nth-child(2) { color: var(--slate); font-size: 16px; line-height: 1.65; }
+        > p:last-child {
+          display: flex;
+          flex-wrap: wrap;
+          align-items: center;
+          gap: 10px;
+          font-size: 14px;
+          color: var(--slate);
+          > a { min-height: 44px; box-sizing: border-box; display: inline-flex; align-items: center; }
+          > a.internal {
+            padding: 10px 16px;
+            border: 1px solid var(--strong);
+            border-radius: var(--radius-buttons);
+            color: var(--ink);
+            text-decoration: none;
+            font-weight: 600;
+            &:hover, &:focus-visible { background: var(--inset); }
+          }
+        }
+      }
+    }
     > ul {
       margin: 0;
       padding: 0;
