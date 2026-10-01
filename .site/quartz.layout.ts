@@ -22,6 +22,7 @@ export const sharedPageComponents: SharedLayout = {
         title: "Из дневника",
         limit: 3,
         showTags: true,
+        pinned: ["Дневник/Иерархия-дохода"],
         filter: (f) => Boolean(f.slug?.startsWith("Дневник/")),
       }),
       condition: (page) => isIndex(page.fileData.slug),

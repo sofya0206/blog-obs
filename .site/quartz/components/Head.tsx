@@ -42,7 +42,7 @@ export default (() => {
     const socialUrl =
       fileData.slug === "404" ? url.toString() : canonicalPageUrl(cfg.baseUrl!, fileData.slug!)
 
-    const ogImagePath = `https://${cfg.baseUrl}/static/og-image.png`
+    const ogImagePath = `https://${cfg.baseUrl}/static/og-portfolio-20261001.png`
 
     const noindex = fileData.slug === "404" || fileData.frontmatter?.noindex === true
     const jsonLd = JSON.stringify({
@@ -97,7 +97,7 @@ export default (() => {
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
         <meta property="og:image:type" content="image/png" />
-        <meta property="og:image:alt" content={cfg.pageTitle} />
+        <meta property="og:image:alt" content="Гуляева Софья — Art Direction, Creative Strategy, Development" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content={title} />
         <meta name="twitter:description" content={description} />

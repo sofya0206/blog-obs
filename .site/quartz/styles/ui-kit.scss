@@ -193,7 +193,7 @@
   .popover article { font-size: 15px; line-height: 1.6; }
   .popover article h2 { font-size: 17px; margin: 1.3rem 0 0.6rem; }
   .popover .article-title { display: block; font-size: 19px; }
-  .popover .content-meta { display: block; }
+  .popover .content-meta { display: flex; }
   .popover[aria-hidden="true"] { pointer-events: none; }
   .popover.active-popover { pointer-events: auto; }
   [reader-mode="on"] .sidebar {

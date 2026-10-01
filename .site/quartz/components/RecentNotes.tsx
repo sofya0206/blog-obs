@@ -13,6 +13,7 @@ interface Options {
   limit: number
   linkToMore: SimpleSlug | false
   showTags: boolean
+  pinned: FullSlug[]
   filter: (f: QuartzPluginData) => boolean
   sort: (f1: QuartzPluginData, f2: QuartzPluginData) => number
 }
@@ -21,6 +22,7 @@ const defaultOptions = (cfg: GlobalConfiguration): Options => ({
   limit: 3,
   linkToMore: false,
   showTags: true,
+  pinned: [],
   filter: () => true,
   sort: byDateAndAlphabetical(cfg),
 })
@@ -33,7 +35,11 @@ export default ((userOpts?: Partial<Options>) => {
     cfg,
   }: QuartzComponentProps) => {
     const opts = { ...defaultOptions(cfg), ...userOpts }
-    const pages = allFiles.filter(opts.filter).sort(opts.sort)
+    const rank = (page: QuartzPluginData) => {
+      const index = opts.pinned.indexOf(page.slug!)
+      return index < 0 ? opts.pinned.length : index
+    }
+    const pages = allFiles.filter(opts.filter).sort((a, b) => rank(a) - rank(b) || opts.sort(a, b))
     const remaining = Math.max(0, pages.length - opts.limit)
     return (
       <div class={classNames(displayClass, "recent-notes")}>
