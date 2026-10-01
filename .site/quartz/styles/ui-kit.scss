@@ -74,8 +74,11 @@
   }
   .recent-notes .recent-ul .recent-li > .section > .desc > h3 > a:is(:hover, :focus-visible),
   .section-ul .section-li > .section > .desc > h3 > a:is(:hover, :focus-visible) {
-    background: var(--selected);
-    color: var(--on-selected);
+    background: var(--inset);
+    color: var(--ink);
+    border-radius: var(--radius-links);
+    padding-inline: 0.22em;
+    margin-inline: -0.22em;
     text-decoration: none;
     box-decoration-break: clone;
     -webkit-box-decoration-break: clone;
