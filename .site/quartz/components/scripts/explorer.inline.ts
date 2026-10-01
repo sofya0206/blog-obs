@@ -37,20 +37,7 @@ function toggleExplorer(this: HTMLElement) {
 
 function toggleFolder(evt: MouseEvent) {
   evt.stopPropagation()
-  const target = evt.target as MaybeHTMLElement
-  if (!target) return
-
-  // Check if target was svg icon or button
-  const isSvg = target.nodeName === "svg"
-
-  // corresponding <ul> element relative to clicked button/folder
-  const folderContainer = (
-    isSvg
-      ? // svg -> div.folder-container
-        target.parentElement
-      : // button.folder-button -> div -> div.folder-container
-        target.parentElement?.parentElement
-  ) as MaybeHTMLElement
+  const folderContainer = (evt.currentTarget as HTMLElement).closest<HTMLElement>(".folder-container")
   if (!folderContainer) return
   const childFolderContainer = folderContainer.nextElementSibling as MaybeHTMLElement
   if (!childFolderContainer) return
@@ -88,6 +75,7 @@ function createFileNode(currentSlug: FullSlug, node: FileTrieNode): HTMLLIElemen
 
   if (currentSlug === node.slug) {
     a.classList.add("active")
+    a.setAttribute("aria-current", "page")
   }
 
   return li
@@ -140,6 +128,11 @@ function createFolderNode(
 
   if (!isCollapsed || folderIsPrefixOfCurrentSlug) {
     folderOuter.classList.add("open")
+  }
+  const toggle = folderContainer.querySelector<HTMLButtonElement>(".folder-toggle")
+  if (toggle) {
+    toggle.setAttribute("aria-expanded", String(folderOuter.classList.contains("open")))
+    toggle.setAttribute("aria-label", `Свернуть или раскрыть папку «${node.displayName}»`)
   }
 
   for (const child of node.children) {
@@ -251,7 +244,7 @@ async function setupExplorer(currentSlug: FullSlug) {
     }
 
     const folderIcons = explorer.getElementsByClassName(
-      "folder-icon",
+      "folder-toggle",
     ) as HTMLCollectionOf<HTMLElement>
     for (const icon of folderIcons) {
       icon.addEventListener("click", toggleFolder)
@@ -299,5 +292,6 @@ window.addEventListener("resize", function () {
 })
 
 function setFolderState(folderElement: HTMLElement, collapsed: boolean) {
-  return collapsed ? folderElement.classList.remove("open") : folderElement.classList.add("open")
+  folderElement.classList.toggle("open", !collapsed)
+  folderElement.previousElementSibling?.querySelector(".folder-toggle")?.setAttribute("aria-expanded", String(!collapsed))
 }

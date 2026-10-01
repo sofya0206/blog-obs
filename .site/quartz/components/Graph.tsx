@@ -1,3 +1,4 @@
+import { IconButton } from "./ui/IconButton"
 import { QuartzComponent, QuartzComponentConstructor, QuartzComponentProps } from "./types"
 // @ts-ignore
 import script from "./scripts/graph.inline"
@@ -68,12 +69,7 @@ export default ((opts?: Partial<GraphOptions>) => {
         <h3>{i18n(cfg.locale).components.graph.title}</h3>
         <div class="graph-outer">
           <div class="graph-container" data-cfg={JSON.stringify(localGraph)}></div>
-          <button
-            class="global-graph-icon"
-            type="button"
-            aria-label="Граф всех заметок"
-            title="Все связи"
-          >
+          <IconButton className="global-graph-icon" label="Граф всех заметок" title="Все связи">
             <svg
               aria-hidden="true"
               xmlns="http://www.w3.org/2000/svg"
@@ -85,11 +81,15 @@ export default ((opts?: Partial<GraphOptions>) => {
             >
               <path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" />
             </svg>
-          </button>
+          </IconButton>
         </div>
-        <div class="global-graph-outer">
+        <p class="graph-caption">
+          <span class="pointer-hint">Наведите на точку, чтобы увидеть заметку.</span>
+          <span class="touch-hint">Нажмите на точку, чтобы открыть заметку.</span>
+        </p>
+        <div class="global-graph-outer" role="dialog" aria-modal="true" aria-label="Связи заметок" aria-hidden="true">
           <div class="global-graph-container" data-cfg={JSON.stringify(globalGraph)}></div>
-          <button class="global-graph-close" type="button" aria-label="Закрыть граф">
+          <IconButton className="global-graph-close" label="Закрыть граф">
             <svg
               viewBox="0 0 24 24"
               fill="none"
@@ -99,7 +99,7 @@ export default ((opts?: Partial<GraphOptions>) => {
             >
               <path d="M6 6l12 12M18 6L6 18" />
             </svg>
-          </button>
+          </IconButton>
         </div>
       </div>
     )

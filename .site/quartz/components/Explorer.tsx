@@ -135,6 +135,7 @@ export default ((userOpts?: Partial<Options>) => {
         <template id="template-folder">
           <li>
             <div class="folder-container">
+              <button type="button" class="folder-toggle" aria-label="Свернуть папку" aria-expanded="true">
               <svg
                 aria-hidden="true"
                 xmlns="http://www.w3.org/2000/svg"
@@ -149,6 +150,7 @@ export default ((userOpts?: Partial<Options>) => {
               >
                 <path d="M6 9l6 6 6-6" />
               </svg>
+              </button>
               <div>
                 <button class="folder-button">
                   <span class="folder-title"></span>

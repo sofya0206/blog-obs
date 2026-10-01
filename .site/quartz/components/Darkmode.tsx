@@ -1,3 +1,4 @@
+import { IconButton } from "./ui/IconButton"
 // @ts-ignore
 import darkmodeScript from "./scripts/darkmode.inline"
 import styles from "./styles/darkmode.scss"
@@ -9,11 +10,11 @@ const Darkmode: QuartzComponent = ({ displayClass, cfg }: QuartzComponentProps) 
   const t = i18n(cfg.locale).components.themeToggle
   // Штриховые иконки (canon §7): stroke 2, currentColor. Показываем лик, в который переключим.
   return (
-    <button
-      type="button"
-      class={classNames(displayClass, "darkmode")}
-      aria-label={`${t.lightMode} / ${t.darkMode}`}
-      title="Сменить лик"
+    <IconButton
+      className={classNames(displayClass, "darkmode")}
+      label={`${t.lightMode} / ${t.darkMode}`}
+      title={"Сменить тему"}
+      pressed={false}
     >
       <svg
         class="dayIcon"
@@ -41,7 +42,7 @@ const Darkmode: QuartzComponent = ({ displayClass, cfg }: QuartzComponentProps) 
       >
         <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
       </svg>
-    </button>
+    </IconButton>
   )
 }
 

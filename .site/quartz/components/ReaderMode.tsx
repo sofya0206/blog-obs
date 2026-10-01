@@ -1,3 +1,4 @@
+import { IconButton } from "./ui/IconButton"
 // @ts-ignore
 import readerModeScript from "./scripts/readermode.inline"
 import styles from "./styles/readermode.scss"
@@ -7,11 +8,11 @@ import { classNames } from "../util/lang"
 
 const ReaderMode: QuartzComponent = ({ displayClass, cfg }: QuartzComponentProps) => {
   return (
-    <button
-      type="button"
-      class={classNames(displayClass, "readermode")}
-      aria-label={i18n(cfg.locale).components.readerMode.title}
+    <IconButton
+      className={classNames(displayClass, "readermode")}
+      label={i18n(cfg.locale).components.readerMode.title}
       title={i18n(cfg.locale).components.readerMode.title}
+      pressed={false}
     >
       <svg
         class="readerIcon"
@@ -27,7 +28,7 @@ const ReaderMode: QuartzComponent = ({ displayClass, cfg }: QuartzComponentProps
         <path d="M2 4h6a4 4 0 0 1 4 4v13a3 3 0 0 0-3-3H2z" />
         <path d="M22 4h-6a4 4 0 0 0-4 4v13a3 3 0 0 1 3-3h7z" />
       </svg>
-    </button>
+    </IconButton>
   )
 }
 

@@ -1,3 +1,4 @@
+import { createDialog } from "./dialog"
 import type { ContentDetails } from "../../plugins/emitters/contentIndex"
 import {
   SimulationNodeDatum,
@@ -16,7 +17,7 @@ import {
 } from "d3"
 import { Text, Graphics, Application, Container, Circle } from "pixi.js"
 import { Group as TweenGroup, Tween as Tweened } from "@tweenjs/tween.js"
-import { registerEscapeHandler, removeAllChildren } from "./util"
+import { removeAllChildren } from "./util"
 import { FullSlug, SimpleSlug, getFullSlug, resolveRelative, simplifySlug } from "../../util/path"
 import { D3Config } from "../Graph"
 
@@ -631,17 +632,14 @@ document.addEventListener("nav", async (e: CustomEventMap["nav"]) => {
   })
 
   const containers = [...document.getElementsByClassName("global-graph-outer")] as HTMLElement[]
+  const dialogs = containers.map((container) => createDialog(container, hideGlobalGraph))
   async function renderGlobalGraph() {
+    if (document.querySelector('[role="dialog"].active')) return
     const slug = getFullSlug(window)
-    for (const container of containers) {
-      container.classList.add("active")
-      const sidebar = container.closest(".sidebar") as HTMLElement
-      if (sidebar) {
-        sidebar.style.zIndex = "10000"
-      }
-
-      const graphContainer = container.querySelector(".global-graph-container") as HTMLElement
-      registerEscapeHandler(container, hideGlobalGraph)
+    for (const [index, container] of containers.entries()) {
+      const closeButton = container.querySelector<HTMLElement>(".global-graph-close")!
+      dialogs[index].open(closeButton)
+      const graphContainer = container.querySelector<HTMLElement>(".global-graph-container")
       if (graphContainer) {
         globalGraphCleanups.push(await renderGraph(graphContainer, slug))
       }
@@ -650,13 +648,7 @@ document.addEventListener("nav", async (e: CustomEventMap["nav"]) => {
 
   function hideGlobalGraph() {
     cleanupGlobalGraphs()
-    for (const container of containers) {
-      container.classList.remove("active")
-      const sidebar = container.closest(".sidebar") as HTMLElement
-      if (sidebar) {
-        sidebar.style.zIndex = ""
-      }
-    }
+    dialogs.forEach((dialog) => dialog.close())
   }
 
   async function shortcutHandler(e: HTMLElementEventMap["keydown"]) {

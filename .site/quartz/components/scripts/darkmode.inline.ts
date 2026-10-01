@@ -34,6 +34,10 @@ const applyLik = (lik: Lik) => {
   root.setAttribute("saved-theme", lik === "titan" ? "light" : "dark")
   const meta = document.getElementById("meta-theme-color") as HTMLMetaElement | null
   if (meta) meta.content = THEME_COLOR[lik]
+  document.querySelectorAll(".darkmode").forEach((button) => {
+    button.setAttribute("aria-pressed", String(lik === "obsidian"))
+    button.setAttribute("aria-label", lik === "titan" ? "Включить тёмную тему" : "Включить светлую тему")
+  })
 }
 
 let initialLik = readStoredLik()

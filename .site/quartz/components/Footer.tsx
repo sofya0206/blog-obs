@@ -20,7 +20,7 @@ export default ((opts?: Options) => {
               </li>
             ))}
           </ul>
-          <p class="site-footer-copy">Софья Гулаева © {year}</p>
+          <p class="site-footer-copy">© {year}</p>
         </div>
       </footer>
     )

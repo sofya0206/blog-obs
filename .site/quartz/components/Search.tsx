@@ -1,3 +1,4 @@
+import { IconButton } from "./ui/IconButton"
 import { QuartzComponent, QuartzComponentConstructor, QuartzComponentProps } from "./types"
 import style from "./styles/search.scss"
 // @ts-ignore
@@ -19,7 +20,7 @@ export default ((userOpts?: Partial<SearchOptions>) => {
     const searchPlaceholder = i18n(cfg.locale).components.search.searchBarPlaceholder
     return (
       <div class={classNames(displayClass, "search")}>
-        <button class="search-button" type="button" aria-label={searchPlaceholder}>
+        <button class="search-button ui-button" type="button" aria-label={searchPlaceholder}>
           <svg
             aria-hidden="true"
             xmlns="http://www.w3.org/2000/svg"
@@ -37,16 +38,21 @@ export default ((userOpts?: Partial<SearchOptions>) => {
             ⌘K
           </kbd>
         </button>
-        <div class="search-container">
+        <div class="search-container" role="dialog" aria-modal="true" aria-label="Поиск по заметкам" aria-hidden="true">
           <div class="search-space">
             <input
               autocomplete="off"
-              class="search-bar"
+              class="search-bar ui-field"
               name="search"
               type="text"
               aria-label={searchPlaceholder}
               placeholder={searchPlaceholder}
             />
+            <IconButton className="search-close" label="Закрыть поиск">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <path d="M6 6l12 12M18 6L6 18" />
+              </svg>
+            </IconButton>
             <div class="search-layout" data-preview={opts.enablePreview}></div>
           </div>
         </div>
