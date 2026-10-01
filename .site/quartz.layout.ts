@@ -29,8 +29,7 @@ export const sharedPageComponents: SharedLayout = {
   ],
   footer: Component.Footer({
     links: {
-      "Обо мне": "/blog-obs/about",
-      Проекты: "/blog-obs/projects",
+      Главная: "/blog-obs/",
       RSS: "/blog-obs/index.xml",
     },
   }),

@@ -16,7 +16,7 @@ const config: QuartzConfig = {
     analytics: null,
     locale: "ru-RU",
     baseUrl: "sofya0206.github.io/blog-obs",
-    ignorePatterns: ["private", "templates", ".templates", ".attachments", ".obsidian"],
+    ignorePatterns: ["private", "templates", ".templates", ".attachments", ".obsidian", "Шаблоны"],
     defaultDateType: "modified",
     theme: {
       // Шрифты — самохостинг (quartz/static/fonts, @font-face в Head.tsx)
