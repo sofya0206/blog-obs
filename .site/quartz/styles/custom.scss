@@ -1992,29 +1992,6 @@ a.b-card-cta {
 /* ---------- Печать: третий набор токенов (canon §41) ----------------------- */
 
 @media print {
-  :root,
-  :root[data-theme="obsidian"],
-  :root[data-theme="titan"] {
-    --canvas: #fff;
-    --inset: #f2f2f2;
-    --surface: #fff;
-    --hover: #fff;
-    --zebra: #fafafa;
-    --hairline: #bbb;
-    --strong: #666;
-    --slate: #444;
-    --tertiary: #666;
-    --soft: #222;
-    --ink: #000;
-    --light: #fff;
-    --lightgray: #bbb;
-    --gray: #444;
-    --darkgray: #222;
-    --dark: #000;
-    --secondary: #000;
-    --highlight: #f2f2f2;
-  }
-
   @page {
     margin: 14mm 12mm;
   }

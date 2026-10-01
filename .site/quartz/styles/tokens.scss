@@ -85,4 +85,18 @@
     --overlay-shadow: 0 12px 36px rgb(0 0 0 / 32%);
     color-scheme: dark;
   }
+  @media print {
+    html:root, html:root[data-theme="titan"], html:root[data-theme="obsidian"] {
+      --canvas: var(--color-paper); --surface: var(--color-paper);
+      --inset: var(--color-parchment); --hover: var(--color-parchment);
+      --zebra: var(--color-parchment); --hairline: var(--color-ash);
+      --ink: var(--color-ink); --soft: var(--color-ink);
+      --slate: var(--color-muted); --tertiary: var(--color-muted); --strong: var(--color-muted);
+      --light: var(--color-paper); --lightgray: var(--color-ash); --gray: var(--color-muted);
+      --dark: var(--color-ink); --darkgray: var(--color-ink); --secondary: var(--color-ink);
+      --highlight: var(--color-stone); --focus-ring: var(--color-ink);
+      --selected: var(--color-ink); --on-selected: var(--color-paper);
+      color-scheme: light;
+    }
+  }
 }
