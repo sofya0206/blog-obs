@@ -69,8 +69,8 @@ body {
 }
 
 ::selection {
-  background: var(--ink);
-  color: var(--canvas);
+  background: var(--inset);
+  color: var(--ink);
 }
 
 a,
@@ -139,19 +139,19 @@ button {
   box-shadow:
     0 0 0 1px var(--ink),
     0 0 0 4px var(--focus-ring);
-  border-radius: 4px;
+  border-radius: var(--radius-links);
 }
 
 .darkmode:focus-visible,
 .readermode:focus-visible,
 .b-btn:focus-visible,
 .b-card-cta:focus-visible {
-  border-radius: 4px;
+  border-radius: var(--radius-buttons);
 }
 
 .search > .search-button:focus-visible,
 .search-bar:focus-visible {
-  border-radius: 6px;
+  border-radius: var(--radius-inputs);
 }
 
 /* ---------- Скип-линк ------------------------------------------------------ */
@@ -288,7 +288,7 @@ article a.internal:not([role="anchor"]),
 article a.external,
 .page-footer a.external {
   background: none;
-  border-radius: 2px;
+  border-radius: var(--radius-links);
   padding: 0 0.1em;
   color: var(--ink);
   text-decoration: underline;
@@ -300,9 +300,9 @@ article a.external,
 @media (hover: hover) {
   article a.internal:not([role="anchor"]):hover,
   article a.external:hover {
-    background: var(--ink);
-    color: var(--canvas);
-    text-decoration: none;
+    background: var(--inset);
+    color: var(--ink);
+    text-decoration-color: var(--ink);
   }
 }
 
@@ -384,7 +384,7 @@ article :is(h1, h2, h3, h4, h5, h6) {
 mark {
   background: var(--ink);
   color: var(--canvas);
-  border-radius: 2px;
+  border-radius: 5px;
   padding: 0 0.15em;
 }
 
@@ -707,7 +707,7 @@ a.page-title {
     align-items: center;
     min-height: 32px;
     padding: 0 0.6rem;
-    border-radius: 0;
+    border-radius: var(--radius-links);
     color: var(--soft);
     font-size: 0.86rem;
     font-weight: 500;
@@ -769,10 +769,9 @@ a.page-title {
 @media (hover: hover) {
   .explorer .explorer-content ul li > a:not(.active):hover,
   .explorer .folder-container:hover {
-    background: transparent;
+    background: var(--inset);
     color: var(--ink);
-    text-decoration: underline;
-    text-underline-offset: 4px;
+    text-decoration: none;
   }
 
   .explorer .folder-container:hover .folder-icon {
@@ -1130,17 +1129,18 @@ a.page-title {
     position: absolute;
     inset: 0.75rem;
     background: var(--surface);
-    border-radius: 8px;
+    border-radius: var(--radius-cards);
   }
 
   & > .popover-inner {
     position: relative;
     width: 26rem;
-    max-height: 22rem;
+    max-height: min(28rem, 65vh);
     padding: 1.1rem 1.25rem 1.25rem;
     background: var(--surface);
     border: 1px solid var(--hairline);
-    border-radius: 8px;
+    border-radius: var(--radius-cards);
+    box-shadow: var(--overlay-shadow);
     color: var(--soft);
     font-size: 0.86rem;
     line-height: 1.55;
@@ -1244,7 +1244,7 @@ a.internal.tag-link,
 article a.internal.tag-link {
   background: transparent;
   border: 1px solid var(--strong);
-  border-radius: 2px;
+  border-radius: 6px;
   color: var(--soft);
   text-transform: uppercase;
   font-size: 0.62rem;
@@ -1549,7 +1549,7 @@ li.recent-li {
         text-decoration: none;
         background: none;
         padding: 0;
-        border-radius: 2px;
+        border-radius: var(--radius-links);
       }
     }
 
@@ -1563,8 +1563,8 @@ li.recent-li {
 @media (hover: hover) {
   li.section-li > .section > .desc > h3 > a:hover,
   li.recent-li > .section > .desc > h3 > a:hover {
-    background: var(--ink);
-    color: var(--canvas);
+    background: var(--inset);
+    color: var(--ink);
   }
 }
 
