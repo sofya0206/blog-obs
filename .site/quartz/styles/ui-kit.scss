@@ -215,4 +215,14 @@
     .ui-button, .ui-icon-button, .ui-field { border-color: ButtonText; }
     :focus-visible { outline-color: Highlight; }
   }
+  @media print {
+    html:root, html:root[data-theme="titan"], html:root[data-theme="obsidian"] {
+      --canvas: var(--color-paper); --surface: var(--color-paper);
+      --ink: var(--color-ink); --soft: var(--color-ink);
+      --slate: var(--color-muted); --tertiary: var(--color-muted);
+      --light: var(--color-paper); --dark: var(--color-ink);
+      --darkgray: var(--color-ink); --secondary: var(--color-ink);
+      color-scheme: light;
+    }
+  }
 }

@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="ru" data-theme="titan" saved-theme="light">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SOFIA — UI kit</title><link rel="stylesheet" href="/blog-obs/index.css">
+<style>
+@font-face{font-family:Inter;src:url('/blog-obs/static/fonts/inter-cyrillic.woff2') format('woff2');font-weight:100 900;font-display:swap}
+.kit{max-width:1080px;margin:auto;padding:40px 24px}.kit-header{display:flex;align-items:center;justify-content:space-between;gap:24px;margin-bottom:40px}.kit-grid{display:grid;grid-template-columns:1fr 1fr;gap:32px}.kit-section{padding:24px;border-top:1px solid var(--hairline)}.kit-section h2{font-size:24px;margin:0 0 24px}.kit-row{display:flex;gap:12px;flex-wrap:wrap;margin:16px 0}.kit .ui-field{width:100%;margin:8px 0}.kit p{line-height:1.6}.kit label{display:block;font-size:14px}.kit-swatches{display:flex;gap:12px;flex-wrap:wrap}.kit-swatch{width:100px;font-size:12px}.kit-swatch span{display:block;height:64px;border:1px solid var(--strong);margin-bottom:8px}.kit .search{max-width:none}.kit .search-space{margin:0!important;width:100%!important}.kit .search-layout{display:flex!important}.kit .results-container{width:100%;max-height:none!important;height:auto!important}.kit-field-error{margin:0}.kit-preview{padding:24px;border-radius:var(--radius-inputs);max-width:100%;box-shadow:var(--overlay-shadow)}.kit .article-title{margin-top:0}@media(max-width:700px){.kit-grid{grid-template-columns:1fr}.kit{padding:24px 16px}.kit-header{align-items:flex-start;flex-direction:column}}
+</style>
+</head>
+<body><main class="kit">
+<header class="kit-header"><div><h1>SOFIA — UI kit</h1><p>Те же токены и компоненты, что в блоге.</p></div><button class="ui-button" id="theme">Сменить тему</button></header>
+<div class="kit-grid">
+<section class="kit-section"><h2>Палитра</h2><div class="kit-swatches">
+<div class="kit-swatch"><span style="background:var(--canvas)"></span>Canvas</div><div class="kit-swatch"><span style="background:var(--surface)"></span>Surface</div><div class="kit-swatch"><span style="background:var(--hover)"></span>Hover</div><div class="kit-swatch"><span style="background:var(--ink)"></span>Ink</div><div class="kit-swatch"><span style="background:var(--slate)"></span>Muted</div>
+</div><p class="ui-status">Цвета состояний всегда задаются парой: текст и фон.</p></section>
+<section class="kit-section"><h2>Кнопки</h2><div class="kit-row"><button class="ui-button">Обычная</button><button class="ui-button" aria-pressed="true">Выбрана</button><button class="ui-button" disabled>Недоступна</button></div><div class="kit-row"><button class="ui-icon-button" aria-label="Закрыть"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg></button><button class="ui-button" aria-busy="true">Загрузка…</button></div><p class="ui-status">Наведение, Tab и выбранное состояние используют общий контракт.</p></section>
+<section class="kit-section"><h2>Поля и сообщения</h2><label for="normal">Поиск заметок</label><input class="ui-field" id="normal" placeholder="Введите название или мысль"><label for="error">Поле с ошибкой</label><input class="ui-field" id="error" aria-invalid="true" aria-describedby="error-message" value=""><p class="ui-status kit-field-error" id="error-message">Введите хотя бы одно слово.</p></section>
+<section class="kit-section"><h2>Текст и ссылки</h2><article><h3>Идея небольшого проекта</h3><p>Небольшая запись с понятным следующим шагом. <a class="internal" href="/blog-obs/">Обычная ссылка</a> и <a class="internal" href="/blog-obs/"><strong>ссылка с выделением</strong></a> остаются читаемыми при наведении.</p><p class="ui-status">Служебная информация — вторичный текст.</p></article></section>
+<section class="kit-section"><h2>Список заметок</h2><div class="recent-notes"><ul class="recent-ul"><li class="recent-li"><div class="section"><p class="meta">Сегодня</p><div class="desc"><h3><a class="internal" href="/blog-obs/">Маленький шаг</a></h3></div></div></li><li class="recent-li"><div class="section"><p class="meta">Вчера</p><div class="desc"><h3><a class="internal" href="/blog-obs/">Что мне интересно</a></h3></div></div></li></ul></div></section>
+<section class="kit-section"><h2>Пустое состояние</h2><div class="ui-panel kit-preview"><h3>Ничего не найдено</h3><p class="ui-status" role="status">Попробуйте другое слово или более короткий запрос.</p></div></section>
+</div></main>
+<script>document.getElementById('theme').onclick=()=>{const root=document.documentElement;const dark=root.dataset.theme==='titan';root.dataset.theme=dark?'obsidian':'titan';root.setAttribute('saved-theme',dark?'dark':'light')}</script>
+</body></html>
