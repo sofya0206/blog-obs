@@ -179,11 +179,15 @@
   .search .preview-container article { font-size: 16px; }
   .search .preview-container article h2 { font-size: 20px; }
 
-  .popover { z-index: 60; }
-  .popover::before { border-radius: var(--radius-inputs); }
+  .popover { z-index: 60; transition: none; }
+  .popover.active-popover { animation: none; opacity: 1; visibility: visible; }
+  .popover::before { border-radius: var(--radius-cards); }
   .popover > .popover-inner {
     width: min(416px, calc(100vw - 40px));
-    border-radius: var(--radius-inputs);
+    max-height: min(360px, calc(100dvh - 112px));
+    background: var(--surface);
+    color: var(--ink);
+    border-radius: var(--radius-cards);
     box-shadow: var(--overlay-shadow);
   }
   .popover article { font-size: 15px; line-height: 1.6; }

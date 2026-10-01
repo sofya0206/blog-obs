@@ -69,16 +69,20 @@ async function showPreview(this: HTMLAnchorElement, event: MouseEvent | FocusEve
     document.body.appendChild(popover)
   }
   if (activeAnchor !== link) return
-  popover.setAttribute("aria-hidden", "false")
-  popover.classList.add("active-popover")
   const bounds = link.getBoundingClientRect()
   const point = event instanceof MouseEvent
     ? { x: event.clientX, y: event.clientY }
     : { x: bounds.left + bounds.width / 2, y: bounds.bottom }
   const { x, y } = await computePosition(link, popover, {
-    strategy: "fixed", middleware: [inline(point), offset(6), flip(), shift({ padding: 12 })],
+    strategy: "fixed", middleware: [inline(point), offset(6), flip(), shift({
+      crossAxis: true,
+      padding: { top: (document.querySelector(".site-header")?.getBoundingClientRect().bottom ?? 0) + 12, right: 12, bottom: 12, left: 12 },
+    })],
   })
+  if (activeAnchor !== link) return
   popover.style.transform = `translate(${Math.round(x)}px, ${Math.round(y)}px)`
+  popover.setAttribute("aria-hidden", "false")
+  popover.classList.add("active-popover")
   if (hash) {
     const heading = popover.querySelector<HTMLElement>(`#${CSS.escape(`popover-internal-${hash.slice(1)}`)}`)
     const inner = popover.querySelector<HTMLElement>(".popover-inner")
@@ -92,6 +96,10 @@ function leaveLink(event: MouseEvent | FocusEvent) {
   closeTimer = setTimeout(hidePopover, 120)
 }
 function escape(event: KeyboardEvent) { if (event.key === "Escape") hidePopover() }
+function pageScroll(event: Event) {
+  if (event.target instanceof Element && event.target.closest(".popover")) return
+  hidePopover()
+}
 
 document.addEventListener("nav", () => {
   for (const link of document.querySelectorAll<HTMLAnchorElement>("a.internal")) {
@@ -107,8 +115,12 @@ document.addEventListener("nav", () => {
     })
   }
   document.addEventListener("keydown", escape)
+  document.addEventListener("scroll", pageScroll, true)
+  window.addEventListener("resize", hidePopover)
   window.addCleanup(() => {
     document.removeEventListener("keydown", escape)
+    document.removeEventListener("scroll", pageScroll, true)
+    window.removeEventListener("resize", hidePopover)
     hidePopover()
     document.querySelectorAll(".popover").forEach((element) => element.remove())
   })

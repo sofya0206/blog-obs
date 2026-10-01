@@ -354,6 +354,15 @@ export async function handleBuild(argv) {
 
     await build(clientRefresh)
     const server = http.createServer(async (req, res) => {
+      // The component catalogue is served locally, outside the public blog.
+      if (["/ui-kit.html", `${argv.baseDir}/ui-kit.html`].includes(req.url?.split("?")[0])) {
+        const catalogue = path.resolve("design/ui-kit.html")
+        if (fs.existsSync(catalogue)) {
+          res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store" })
+          res.end(await promises.readFile(catalogue))
+          return
+        }
+      }
       if (argv.baseDir && !req.url?.startsWith(argv.baseDir)) {
         console.log(
           styleText(
