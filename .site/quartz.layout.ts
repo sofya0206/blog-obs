@@ -19,10 +19,10 @@ export const sharedPageComponents: SharedLayout = {
   afterBody: [
     Component.ConditionalRender({
       component: Component.RecentNotes({
-        title: "Дневник и заметки",
-        limit: 4,
+        title: "Из дневника",
+        limit: 3,
         showTags: true,
-        filter: (f) => Boolean(f.slug?.startsWith("Дневник/") || f.slug?.startsWith("Заметки/")),
+        filter: (f) => Boolean(f.slug?.startsWith("Дневник/")),
       }),
       condition: (page) => isIndex(page.fileData.slug),
     }),

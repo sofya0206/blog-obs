@@ -7,7 +7,7 @@ const PageTitle: QuartzComponent = ({ fileData, displayClass }: QuartzComponentP
   return (
     <nav class={classNames(displayClass, "site-main-nav")} aria-label="Основная навигация">
       <a class="page-title" href={baseDir}>Главная</a>
-      <a class="desktop-nav-link" href="/blog-obs/Проекты/">Проекты</a>
+      <a class="desktop-nav-link" href="/blog-obs/#выбранные-работы">Проекты</a>
       <a class="desktop-nav-link" href="https://github.com/sofya0206" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
     </nav>
   )
