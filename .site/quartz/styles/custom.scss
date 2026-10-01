@@ -438,7 +438,7 @@ html:root {
   flex: 1 1 auto;
 }
 
-.page-title {
+a.page-title {
   margin: 0;
   font-size: 1.1rem;
   text-transform: uppercase;
@@ -446,12 +446,10 @@ html:root {
   font-weight: 750;
   line-height: 1;
 
-  a,
-  a:hover {
-    color: var(--ink);
-    background: none;
-    text-decoration: none;
-  }
+  color: var(--ink);
+  background: none;
+  text-decoration: none;
+  &:hover { color: var(--ink); text-decoration: underline; text-underline-offset: 5px; }
 }
 
 /* Кнопка поиска в шапке: поле с подсказкой клавиш */
@@ -2048,7 +2046,7 @@ a.b-card-cta {
     padding: 0 0 40px;
     border-bottom: 1px solid var(--hairline);
     > p:first-child { max-width: 36rem; margin: 0 0 32px; font-size: 20px; line-height: 1.6; }
-    > p:last-child {
+    > p:nth-of-type(2) {
       display: flex; flex-wrap: wrap; gap: 12px; margin: 0;
       > a.external {
         display: inline-flex; align-items: center; justify-content: center; gap: 8px;
@@ -2063,6 +2061,36 @@ a.b-card-cta {
         &:first-child:hover { background: var(--strong); border-color: var(--strong); }
       }
     }
+    > h2 {
+      margin: 56px 0 16px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--hairline);
+      font: 600 12px/1.3 var(--bodyFont);
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--slate);
+    }
+    > ul {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      border-bottom: 1px solid var(--hairline);
+      > li {
+        margin: 0;
+        padding: 17px 0;
+        border-top: 1px solid var(--hairline);
+        font-size: 16px;
+        line-height: 1.55;
+        color: var(--slate);
+        > a.internal {
+          color: var(--ink);
+          font-weight: 650;
+          text-decoration: none;
+          &:hover { text-decoration: underline; text-underline-offset: 4px; }
+        }
+      }
+    }
+    > p:last-child { max-width: 40rem; font-size: 16px; line-height: 1.65; }
   }
   @media (max-width: 800px) {
     .home-name { font-size: clamp(40px, 11vw, 64px); margin-bottom: 20px; }
