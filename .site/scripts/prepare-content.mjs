@@ -17,7 +17,6 @@ async function copy(dir, relative = "") {
       await fs.mkdir(path.dirname(target), { recursive: true })
       if (entry.name.endsWith(".md")) {
         let content = await fs.readFile(source, "utf8")
-        content = content.replace(/(href|src)="\/(?!\/|blog-obs(?:\/|"))/g, '$1="/blog-obs/')
         await fs.writeFile(target, content)
       } else await fs.copyFile(source, target)
     }
