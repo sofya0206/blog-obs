@@ -105,6 +105,7 @@
     color: var(--slate);
     cursor: pointer;
     svg { pointer-events: none; }
+    &[aria-expanded="false"] svg { transform: rotate(-90deg); }
   }
   .explorer .folder-container .folder-icon { padding: 0; width: 14px; height: 14px; }
   .toc .toc-content > li > a,
@@ -197,6 +198,7 @@
   }
 
   @media (max-width: 800px) {
+    .ui-icon-button.desktop-only { display: none; }
     .explorer .explorer-content ul li > a,
     .explorer .folder-container { min-height: 44px; }
     .folder-toggle { width: 44px; height: 44px; flex-basis: 44px; }

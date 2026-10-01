@@ -20,6 +20,11 @@ type FolderState = {
 }
 
 let currentExplorerState: Array<FolderState>
+function syncMobileExplorer(explorer: Element) {
+  if (document.querySelector('[role="dialog"].active')) return
+  const open = matchMedia("(max-width: 800px)").matches && !explorer.classList.contains("collapsed")
+  document.querySelectorAll<HTMLElement>(".center, .site-footer").forEach((element) => { element.inert = open })
+}
 function toggleExplorer(this: HTMLElement) {
   const nearestExplorer = this.closest(".explorer") as HTMLElement
   if (!nearestExplorer) return
@@ -33,6 +38,7 @@ function toggleExplorer(this: HTMLElement) {
     "mobile-no-scroll",
     expanded && window.matchMedia("(max-width: 800px)").matches,
   )
+  syncMobileExplorer(nearestExplorer)
 }
 
 function toggleFolder(evt: MouseEvent) {
@@ -279,6 +285,7 @@ document.addEventListener("nav", async (e: CustomEventMap["nav"]) => {
     }
 
     mobileExplorer.classList.remove("hide-until-loaded")
+    syncMobileExplorer(explorer)
   }
 })
 
@@ -289,6 +296,13 @@ window.addEventListener("resize", function () {
     "mobile-no-scroll",
     mobile && !!explorer && !explorer.classList.contains("collapsed"),
   )
+  if (explorer) syncMobileExplorer(explorer)
+})
+
+document.addEventListener("keydown", (event) => {
+  if (event.key !== "Escape" || !matchMedia("(max-width: 800px)").matches) return
+  const button = document.querySelector<HTMLButtonElement>('.mobile-explorer[aria-expanded="true"]')
+  if (button) { button.click(); button.focus() }
 })
 
 function setFolderState(folderElement: HTMLElement, collapsed: boolean) {

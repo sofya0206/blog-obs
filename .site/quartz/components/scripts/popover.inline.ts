@@ -4,7 +4,9 @@ import { fetchCanonical } from "./util"
 
 const parser = new DOMParser()
 let activeAnchor: HTMLAnchorElement | null = null
+let closeTimer: ReturnType<typeof setTimeout> | undefined
 function hidePopover() {
+  clearTimeout(closeTimer)
   activeAnchor = null
   document.querySelectorAll<HTMLElement>(".popover").forEach((element) => {
     element.classList.remove("active-popover")
@@ -55,6 +57,7 @@ async function showPreview(this: HTMLAnchorElement, event: MouseEvent | FocusEve
       hints.forEach((hint) => inner.appendChild(hint))
     } else return
     popover.appendChild(inner)
+    popover.addEventListener("mouseenter", () => clearTimeout(closeTimer))
     popover.addEventListener("mouseleave", (leave) => {
       if (leave.relatedTarget instanceof Node && activeAnchor?.contains(leave.relatedTarget)) return
       hidePopover()
@@ -84,7 +87,9 @@ async function showPreview(this: HTMLAnchorElement, event: MouseEvent | FocusEve
 }
 function leaveLink(event: MouseEvent | FocusEvent) {
   if (event.relatedTarget instanceof Element && event.relatedTarget.closest(".popover")) return
-  hidePopover()
+  // Allow the pointer to cross the small gap from a link to its preview.
+  clearTimeout(closeTimer)
+  closeTimer = setTimeout(hidePopover, 120)
 }
 function escape(event: KeyboardEvent) { if (event.key === "Escape") hidePopover() }
 
