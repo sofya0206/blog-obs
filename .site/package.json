@@ -19,7 +19,7 @@
     "format": "npx prettier . --write",
     "test": "tsx --test",
     "profile": "0x -D prof ./quartz/bootstrap-cli.mjs build --concurrency=1",
-    "dev": "node scripts/prepare-content.mjs && node quartz/bootstrap-cli.mjs build -d .content --serve --port 8091 --wsPort 8092 --baseDir /blog-obs --concurrency 2"
+    "dev": "node scripts/dev-vault.mjs"
   },
   "engines": {
     "npm": ">=10.9.2",

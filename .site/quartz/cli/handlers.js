@@ -476,11 +476,17 @@ export async function handleBuild(argv) {
       "**/*.scss",
       "package.json",
     ])
-    chokidar
+    // Vault snapshots need complete rebuilds, including global lists and renamed pages.
+    if (process.env.OBSIDIAN_VAULT_PREVIEW === "1") {
+      paths.push(".quartz-cache/vault-rebuild")
+    }
+    const sourceWatcher = chokidar
       .watch(paths, { ignoreInitial: true })
       .on("add", () => build(clientRefresh))
       .on("change", () => build(clientRefresh))
       .on("unlink", () => build(clientRefresh))
+
+    await new Promise((resolve) => sourceWatcher.once("ready", resolve))
 
     console.log(styleText("gray", "hint: exit with ctrl+c"))
   }

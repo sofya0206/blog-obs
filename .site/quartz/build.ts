@@ -90,7 +90,7 @@ async function buildQuartz(argv: Argv, mut: Mutex, clientRefresh: () => void) {
   )
   release()
 
-  if (argv.watch) {
+  if (argv.watch && process.env.OBSIDIAN_VAULT_PREVIEW !== "1") {
     ctx.incremental = true
     return startWatching(ctx, mut, parsedFiles, clientRefresh)
   }
