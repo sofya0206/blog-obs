@@ -177,6 +177,17 @@ async function setupExplorer(currentSlug: FullSlug) {
     const entries = [...Object.entries(data)] as [FullSlug, ContentDetails][]
     const trie = FileTrieNode.fromEntries(entries)
 
+    // Keep the three editorial sections visible before their first note is published.
+    // A real folder from the content index replaces each placeholder automatically.
+    for (const name of ["Дневник", "Заметки", "Проекты"]) {
+      if (!trie.children.some((node) => node.displayName === name)) {
+        const folder = new FileTrieNode([name])
+        folder.isFolder = true
+        folder.displayName = name
+        trie.children.push(folder)
+      }
+    }
+
     // Apply functions in order
     for (const fn of opts.order) {
       switch (fn) {

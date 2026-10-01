@@ -1,12 +1,12 @@
 // OFF+BRAND primitives, semantic theme pairs, and shared control geometry.
 @mixin apply {
   html:root {
-    --color-parchment: #e5e4e0;
+    --color-parchment: #fafafa;
     --color-ink: #1d1d1d;
     --color-paper: #ffffff;
-    --color-ash: #bfbebe;
-    --color-stone: #cdcdc9;
-    --color-muted: #565653;
+    --color-ash: #d8d8d8;
+    --color-stone: #efefef;
+    --color-muted: #616161;
     --control-size: 44px;
     --space-1: 4px;
     --space-2: 8px;

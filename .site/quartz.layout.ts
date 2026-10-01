@@ -46,7 +46,7 @@ export const defaultContentPageLayout: PageLayout = {
     Component.ContentMeta({ showComma: false }),
     Component.TagList(),
   ],
-  left: [Component.Explorer({ title: "Разделы", folderDefaultState: "open" })],
+  left: [Component.Explorer({ title: "Разделы", folderDefaultState: "open", folderClickBehavior: "collapse" })],
   right: [
     Component.DesktopOnly(Component.TableOfContents()),
     Component.Graph({
@@ -64,7 +64,7 @@ export const defaultListPageLayout: PageLayout = {
     Component.ArticleTitle(),
     Component.ContentMeta({ showComma: false }),
   ],
-  left: [Component.Explorer({ title: "Разделы", folderDefaultState: "open" })],
+  left: [Component.Explorer({ title: "Разделы", folderDefaultState: "open", folderClickBehavior: "collapse" })],
   // Страницы папок и тегов не входят в граф — правая колонка пустая
   right: [],
 }
