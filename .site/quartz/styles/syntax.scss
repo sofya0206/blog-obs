@@ -1,0 +1,40 @@
+/* Подсветка синтаксиса — только серая шкала (canon §10.6).
+   Shiki красит токены темами github-light/github-dark; тема здесь служит только
+   классификатором: по её цвету узнаём роль токена и отдаём ему роль бренда.
+   Иерархию, которую обычно несёт оттенок, несут вес, курсив и прозрачность. */
+
+code[data-theme*=" "] {
+  color: var(--ink);
+  background-color: transparent;
+}
+
+/* Всё неизвестное — soft: цвет из темы наружу не просачивается никогда */
+code[data-theme*=" "] span {
+  color: var(--soft);
+}
+
+/* Идентификаторы, пунктуация и простой текст */
+code[data-theme*=" "] span[style*="--shiki-light:#24292E"],
+code[data-theme*=" "] span[style*="--shiki-light:#E36209"] {
+  color: var(--ink);
+}
+
+/* Ключевые слова и теги — ink, вес 600 */
+code[data-theme*=" "] span[style*="--shiki-light:#D73A49"],
+code[data-theme*=" "] span[style*="--shiki-light:#22863A"] {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+/* Строки, функции, константы и числа — soft */
+code[data-theme*=" "] span[style*="--shiki-light:#032F62"],
+code[data-theme*=" "] span[style*="--shiki-light:#6F42C1"],
+code[data-theme*=" "] span[style*="--shiki-light:#005CC5"] {
+  color: var(--soft);
+}
+
+/* Комментарии — slate, курсив */
+code[data-theme*=" "] span[style*="--shiki-light:#6A737D"] {
+  color: var(--slate);
+  font-style: italic;
+}

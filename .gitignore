@@ -1,0 +1,15 @@
+# Local Obsidian configuration and plugin binaries
+.obsidian/
+.trash/
+.DS_Store
+node_modules/
+.site/public/
+.site/.content/
+.site/.quartz-cache/
+*.log
+.env
+.env.*
+*.session
+*.session-journal
+*.pem
+*.key

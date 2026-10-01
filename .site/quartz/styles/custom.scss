@@ -1,0 +1,2088 @@
+@use "./offbrand.scss" as offbrand;
+@use "./base.scss";
+@use "./variables.scss" as *;
+
+/* ============================================================
+   BOROZDOV — брендовый слой поверх темы Quartz
+   Канон: ~/Documents/Work/My/BRAND.md (§2 палитра, §10.6 длинный текст).
+   Два лика: ОБСИДИАН (тёмный, первичный) и ТИТАН (светлый).
+   Монохром, инверсия — единственный акцент, линии вместо теней.
+   ============================================================ */
+
+/* ---------- Токены ----------------------------------------------------------
+   Единственное место с цветовыми литералами (закон 6). Лик — data-theme на <html>,
+   его ставит darkmode.inline.ts до первой отрисовки; ОБСИДИАН дублируется на голом
+   :root. Переменные самого Quartz (--light, --dark…) задаются в quartz.config.ts
+   теми же значениями.
+   -------------------------------------------------------------------------- */
+
+:root,
+:root[data-theme="obsidian"] {
+  --canvas: #0d0d0d;
+  --inset: #121212;
+  --surface: #1a1a1a;
+  --hover: #212121;
+  --zebra: #161616;
+  --hairline: #2e2e2e;
+  --strong: #6b6b6b;
+  --slate: #8a8a8a;
+  --tertiary: #6b6b6b;
+  --soft: #d1d1d1;
+  --ink: #fafafa;
+  --focus-ring: rgba(250, 250, 250, 0.22);
+  --scrim: rgba(0, 0, 0, 0.7);
+}
+
+:root[data-theme="titan"] {
+  --canvas: #fafafa;
+  --inset: #ececec;
+  --surface: #ffffff;
+  --hover: #f2f2f2;
+  --zebra: #f6f6f6;
+  --hairline: #e4e4e4;
+  --strong: #8a8a8a;
+  --slate: #6b6b6b;
+  --tertiary: #8a8a8a;
+  --soft: #3d3d3d;
+  --ink: #0d0d0d;
+  --focus-ring: rgba(13, 13, 13, 0.22);
+  --scrim: rgba(13, 13, 13, 0.45);
+}
+
+/* ---------- Шрифты ----------------------------------------------------------
+   Файлы — quartz/static/fonts, @font-face инлайном в Head.tsx. Фолбэки с
+   подогнанными метриками гасят прыжок вёрстки при подмене шрифта.
+   -------------------------------------------------------------------------- */
+
+@font-face {
+  font-family: "Inter Fallback";
+  src: local("Arial"), local("Helvetica");
+  size-adjust: 107%;
+  ascent-override: 90.5%;
+  descent-override: 22.5%;
+  line-gap-override: 0%;
+}
+
+@font-face {
+  font-family: "JetBrains Mono Fallback";
+  src: local("Menlo"), local("Courier New");
+  size-adjust: 99.7%;
+  ascent-override: 102.3%;
+  descent-override: 30.1%;
+}
+
+/* html:root — специфичнее :root из joinStyles Quartz, иначе его стек шрифтов победит */
+html:root {
+  --font-sans:
+    "Inter", "Inter Fallback", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+    sans-serif;
+  --font-mono:
+    "JetBrains Mono", "JetBrains Mono Fallback", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --titleFont: var(--font-sans);
+  --headerFont: var(--font-sans);
+  --bodyFont: var(--font-sans);
+  --codeFont: var(--font-mono);
+}
+
+/* ---------- База ----------------------------------------------------------- */
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background: var(--canvas);
+  color: var(--soft);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  font-optical-sizing: auto;
+}
+
+::selection {
+  background: var(--ink);
+  color: var(--canvas);
+}
+
+a,
+button,
+input,
+label,
+[role="button"] {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+button {
+  font: inherit;
+  line-height: 1;
+}
+
+.num,
+.mono {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+.metrika-pixel {
+  position: absolute;
+  left: -9999px;
+}
+
+/* Мгновенная смена лика: darkmode.inline.ts вешает класс на время смены */
+.theme-switching *,
+.theme-switching *::before,
+.theme-switching *::after {
+  transition: none !important;
+}
+
+/* ---------- Скроллбар ------------------------------------------------------ */
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--strong) transparent;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: var(--canvas);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--strong);
+  border-radius: 4px;
+  border: 2px solid var(--canvas);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--ink);
+}
+
+/* ---------- Фокус ----------------------------------------------------------
+   Двухслойное кольцо (canon §28.1): линия чернилами дотягивает до 3:1,
+   прозрачный outline переживает forced-colors.
+   -------------------------------------------------------------------------- */
+
+:focus-visible {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  box-shadow:
+    0 0 0 1px var(--ink),
+    0 0 0 4px var(--focus-ring);
+  border-radius: 4px;
+}
+
+.darkmode:focus-visible,
+.readermode:focus-visible,
+.b-btn:focus-visible,
+.b-card-cta:focus-visible {
+  border-radius: 4px;
+}
+
+.search > .search-button:focus-visible,
+.search-bar:focus-visible {
+  border-radius: 6px;
+}
+
+/* ---------- Скип-линк ------------------------------------------------------ */
+
+.skip-link {
+  position: absolute;
+  top: 0.75rem;
+  left: 0.75rem;
+  z-index: 1000;
+  padding: 0.6rem 1rem;
+  background: var(--ink);
+  color: var(--canvas);
+  border-radius: 4px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transform: translateY(-200%);
+
+  &:focus-visible {
+    transform: none;
+    color: var(--canvas);
+  }
+}
+
+/* ---------- Типографика: прописные — голос бренда ------------------------- */
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.article-title {
+  color: var(--ink);
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+  font-weight: $semiBoldWeight;
+  line-height: 1.05;
+}
+
+article {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    margin-top: 2.2em;
+    scroll-margin-top: 1.5rem;
+  }
+
+  h4,
+  h5,
+  h6 {
+    letter-spacing: 0.02em;
+  }
+}
+
+.article-title {
+  font-size: clamp(1.9rem, 5vw, 2.6rem);
+  margin: 1.5rem 0 0.75rem;
+}
+
+h1 a,
+h2 a,
+h3 a,
+h4 a,
+h5 a,
+h6 a,
+.page-title a {
+  font-weight: inherit;
+}
+
+strong {
+  color: var(--ink);
+  font-weight: $semiBoldWeight;
+}
+
+article p,
+article li {
+  line-height: 1.7;
+}
+
+/* Лейбл: прописные, разрежённые, slate */
+.b-label {
+  color: var(--slate);
+  text-transform: uppercase;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+}
+
+/* Даты и счётчики — моно с табличными цифрами (закон 7) */
+.content-meta,
+.meta,
+time,
+.date,
+.page-listing .meta,
+.section-li .meta {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 0.75rem;
+  color: var(--slate);
+  letter-spacing: 0;
+}
+
+.content-meta {
+  margin-top: 0;
+  text-transform: uppercase;
+}
+
+table,
+.katex {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- Ссылки ----------------------------------------------------------
+   Тот же полюс, что текст; отличие — подчёркивание strong. Ховер в статье —
+   инверсия плашкой (canon §10.6). Якоря заголовков в это правило не входят.
+   -------------------------------------------------------------------------- */
+
+a {
+  font-weight: 500;
+  color: var(--ink);
+  transition:
+    background 0.15s ease,
+    color 0.15s ease,
+    border-color 0.15s ease;
+}
+
+article a.internal:not([role="anchor"]),
+article a.external,
+.page-footer a.external {
+  background: none;
+  border-radius: 2px;
+  padding: 0 0.1em;
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  text-decoration-color: var(--strong);
+}
+
+@media (hover: hover) {
+  article a.internal:not([role="anchor"]):hover,
+  article a.external:hover {
+    background: var(--ink);
+    color: var(--canvas);
+    text-decoration: none;
+  }
+}
+
+/* Стрелка внешней ссылки: штрих, наследует цвет */
+.external-icon {
+  display: inline-block;
+  width: 0.7em;
+  height: 0.7em;
+  margin-left: 0.1em;
+  vertical-align: 0.05em;
+  stroke: currentColor;
+}
+
+/* Несуществующая заметка: tertiary, пунктир */
+article a.internal.broken {
+  color: var(--tertiary);
+  opacity: 1;
+  text-decoration-style: dashed;
+  text-decoration-color: var(--tertiary);
+  cursor: default;
+}
+
+@media (hover: hover) {
+  article a.internal.broken:hover {
+    background: none;
+    color: var(--tertiary);
+    text-decoration: underline dashed var(--tertiary);
+  }
+}
+
+article a.internal:has(> img) {
+  text-decoration: none;
+  padding: 0;
+}
+
+/* Якорь заголовка: маленькая штриховая иконка слева от заголовка, видна при наведении */
+article :is(h1, h2, h3, h4, h5, h6) {
+  position: relative;
+
+  & > a[role="anchor"] {
+    position: absolute;
+    left: -1.75rem;
+    top: 50%;
+    width: 1.25rem;
+    height: 1.25rem;
+    margin: 0;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transform: translateY(-50%);
+    color: var(--slate);
+    background: none;
+    border-radius: 4px;
+    opacity: 0;
+    transition: opacity 0.15s ease;
+
+    & > svg {
+      width: 16px;
+      height: 16px;
+    }
+  }
+
+  &:hover > a[role="anchor"],
+  & > a[role="anchor"]:focus-visible {
+    opacity: 1;
+  }
+}
+
+@media all and ($mobile) {
+  article :is(h1, h2, h3, h4, h5, h6) > a[role="anchor"] {
+    display: none;
+  }
+}
+
+/* ---------- Выделение ==текст== : инверсия --------------------------------- */
+
+.text-highlight,
+mark {
+  background: var(--ink);
+  color: var(--canvas);
+  border-radius: 2px;
+  padding: 0 0.15em;
+}
+
+/* ============================================================
+   Оболочка сайта: шапка → три колонки → футер
+   ============================================================ */
+
+html:root {
+  --header-h: 64px;
+  --shell-max: 1440px;
+  --shell-pad: 2rem;
+  --rail-left: 250px;
+  --rail-right: 270px;
+  --rail-gap: 3.5rem;
+}
+
+@media all and ($mobile) {
+  html:root {
+    --header-h: 56px;
+    --shell-pad: 1rem;
+  }
+}
+
+/* ---------- Шапка ---------------------------------------------------------- */
+
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: var(--canvas);
+  border-bottom: 1px solid var(--hairline);
+}
+
+.site-header-inner,
+.site-body,
+.site-footer-inner {
+  box-sizing: border-box;
+}
+
+.site-header-inner {
+  max-width: var(--shell-max);
+  height: var(--header-h);
+  margin: 0 auto;
+  padding: 0 var(--shell-pad);
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.site-header .spacer {
+  flex: 1 1 auto;
+}
+
+.page-title {
+  margin: 0;
+  font-size: 1.15rem;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+  font-weight: 700;
+  line-height: 1;
+
+  a,
+  a:hover {
+    color: var(--ink);
+    background: none;
+    text-decoration: none;
+  }
+}
+
+/* Кнопка поиска в шапке: поле с подсказкой клавиш */
+.site-header .search {
+  max-width: none;
+  min-width: 0;
+
+  & > .search-button {
+    width: 15rem;
+    height: 36px;
+    padding: 0 0.5rem 0 0.75rem;
+    gap: 0.5rem;
+    background: var(--inset);
+    border: 1px solid var(--hairline);
+    border-radius: 6px;
+    color: var(--slate);
+    cursor: pointer;
+
+    & > svg {
+      width: 16px;
+      min-width: 16px;
+      height: 16px;
+      margin: 0;
+    }
+
+    & > p {
+      flex: 1;
+      margin: 0;
+      color: var(--slate);
+      text-transform: uppercase;
+      font-size: 0.68rem;
+      letter-spacing: 0.1em;
+      font-weight: 500;
+      text-align: left;
+    }
+
+    & > .search-kbd {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      color: var(--tertiary);
+      border: 1px solid var(--hairline);
+      border-radius: 4px;
+      padding: 0.15rem 0.35rem;
+      line-height: 1;
+    }
+  }
+}
+
+@media (hover: hover) {
+  .site-header .search > .search-button:hover {
+    border-color: var(--strong);
+    color: var(--ink);
+
+    & > p {
+      color: var(--ink);
+    }
+  }
+}
+
+@media all and ($mobile) {
+  .site-header .search > .search-button {
+    width: 36px;
+    padding: 0;
+    justify-content: center;
+    background: transparent;
+    border-color: var(--strong);
+    border-radius: 4px;
+    color: var(--ink);
+
+    & > p,
+    & > .search-kbd {
+      display: none;
+    }
+  }
+}
+
+/* ---------- Тело: три колонки ---------------------------------------------- */
+
+.site-body {
+  flex: 1 0 auto;
+  width: 100%;
+  max-width: var(--shell-max);
+  margin: 0 auto;
+  padding: 0 var(--shell-pad);
+  display: grid;
+  grid-template-columns: var(--rail-left) minmax(0, 1fr) var(--rail-right);
+  column-gap: var(--rail-gap);
+  align-items: start;
+}
+
+.sidebar {
+  position: sticky;
+  top: var(--header-h);
+  max-height: calc(100dvh - var(--header-h));
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  display: flex;
+  flex-direction: column;
+  gap: 2.25rem;
+  padding: 2.5rem 0 2rem;
+  min-width: 0;
+}
+
+.center {
+  min-width: 0;
+  padding: 2.5rem 0 5rem;
+  outline: none;
+}
+
+.page-header {
+  margin-bottom: 1.5rem;
+}
+
+.page-footer {
+  margin-top: 4rem;
+}
+
+/* Заголовки виджетов — лейблы */
+.sidebar h2,
+.sidebar h3,
+.explorer .title-button h2,
+.toc > .toc-header h3,
+.backlinks > h3,
+.graph > h3,
+.recent-notes > h3 {
+  margin: 0;
+  color: var(--slate);
+  text-transform: uppercase;
+  font-size: 0.66rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  line-height: 1;
+}
+
+/* Планшет: правая колонка уходит под статью */
+@media all and ($tablet) {
+  .site-body {
+    grid-template-columns: 220px minmax(0, 1fr);
+    column-gap: 2.5rem;
+  }
+
+  .sidebar.right {
+    grid-column: 2;
+    position: static;
+    max-height: none;
+    padding-top: 0;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 2rem;
+
+    & > * {
+      flex: 1 1 18rem;
+    }
+
+    & > .toc {
+      display: none;
+    }
+  }
+}
+
+/* Телефон: одна колонка, проводник — панель по кнопке в полосе под шапкой */
+@media all and ($mobile) {
+  .site-body {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .sidebar {
+    position: static;
+    max-height: none;
+    overflow: visible;
+    padding: 0;
+  }
+
+  .sidebar.left {
+    order: -1;
+    position: sticky;
+    top: var(--header-h);
+    z-index: 40;
+    background: var(--canvas);
+    border-bottom: 1px solid var(--hairline);
+    margin: 0 calc(-1 * var(--shell-pad));
+    padding: 0 var(--shell-pad);
+  }
+
+  .center {
+    padding: 1.5rem 0 3rem;
+  }
+
+  .sidebar.right {
+    padding: 0 0 2rem;
+    gap: 2rem;
+
+    & > .toc {
+      display: none;
+    }
+  }
+}
+
+/* ---------- Проводник (Explorer) ------------------------------------------- */
+
+.explorer {
+  overflow: visible;
+  min-height: 0;
+
+  button.desktop-explorer {
+    gap: 0.5rem;
+    color: var(--slate);
+    margin-bottom: 0.9rem;
+
+    & .fold {
+      margin: 0;
+      opacity: 1;
+      color: var(--tertiary);
+    }
+  }
+
+  button.mobile-explorer {
+    align-items: center;
+    gap: 0.5rem;
+    height: 44px;
+    padding: 0;
+    color: var(--ink);
+    text-transform: uppercase;
+    font-size: 0.68rem;
+    letter-spacing: 0.12em;
+    font-weight: 500;
+
+    & .lucide-menu {
+      stroke: currentColor;
+    }
+  }
+
+  /* Открытая панель: кнопка показывает состояние */
+  &:not(.collapsed) button.mobile-explorer {
+    color: var(--ink);
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+
+  .explorer-content {
+    margin-top: 0;
+  }
+
+  .explorer-content ul.explorer-ul {
+    margin: 0;
+    padding: 0;
+  }
+
+  /* Строки: файл и папка одной высоты, ховер — подложка, активный — инверсия */
+  .explorer-content ul li > a,
+  .folder-container {
+    display: flex;
+    align-items: center;
+    min-height: 32px;
+    padding: 0 0.6rem;
+    border-radius: 4px;
+    color: var(--soft);
+    font-size: 0.86rem;
+    font-weight: 500;
+    line-height: 1.3;
+    opacity: 1;
+    transition:
+      background 0.15s ease,
+      color 0.15s ease;
+  }
+
+  .explorer-content ul li > a {
+    text-decoration: none;
+  }
+
+  .explorer-content ul li > a.active {
+    background: var(--ink);
+    color: var(--canvas);
+    font-weight: 600;
+  }
+
+  .folder-container {
+    gap: 0.4rem;
+
+    & .folder-icon {
+      margin: 0;
+      color: var(--tertiary);
+      transition: transform 0.2s ease;
+    }
+
+    & div > a,
+    & div > button {
+      padding: 0;
+      font-family: var(--font-sans);
+      line-height: 1.3;
+    }
+
+    & div > button span,
+    & div > a {
+      color: var(--ink);
+      font-size: 0.86rem;
+      font-weight: 600;
+      line-height: 1.3;
+      text-transform: none;
+      letter-spacing: 0;
+    }
+  }
+
+  .folder-outer > ul {
+    margin-left: 0.9rem;
+    padding-left: 0.5rem;
+    border-left: 1px solid var(--hairline);
+  }
+}
+
+@media (hover: hover) {
+  .explorer .explorer-content ul li > a:not(.active):hover,
+  .explorer .folder-container:hover {
+    background: var(--hover);
+    color: var(--ink);
+  }
+
+  .explorer .folder-container:hover .folder-icon {
+    color: var(--ink);
+  }
+}
+
+/* Панель проводника на телефоне: выезжает под шапкой поверх страницы */
+@media all and ($mobile) {
+  .explorer {
+    flex: none;
+    margin: 0;
+    height: auto;
+
+    &.collapsed,
+    &:not(.collapsed) {
+      flex: none;
+    }
+
+    /* Панель начинается под полосой с кнопкой «Разделы» (44px + hairline) */
+    .explorer-content {
+      position: fixed;
+      top: calc(var(--header-h) + 45px);
+      left: 0;
+      width: 100vw;
+      max-width: 100vw;
+      height: calc(100dvh - var(--header-h) - 45px);
+      max-height: none;
+      padding: 1.25rem var(--shell-pad) 2rem;
+      background: var(--canvas);
+      border-top: 1px solid var(--hairline);
+      z-index: 45;
+      overflow-y: auto;
+    }
+  }
+
+  /* Контент под панелью не уезжает вбок */
+  .page > #quartz-body.lock-scroll > :not(.sidebar.left:has(.explorer)),
+  .page > #quartz-body > :not(.sidebar.left:has(.explorer)) {
+    transform: none;
+    transition: none;
+  }
+}
+
+/* ---------- Оглавление ----------------------------------------------------- */
+
+.toc {
+  min-height: 0;
+
+  & > .toc-header {
+    gap: 0.5rem;
+    margin-bottom: 0.9rem;
+
+    & .fold {
+      margin: 0;
+      opacity: 1;
+      color: var(--tertiary);
+    }
+  }
+
+  & > ul.toc-content {
+    margin: 0;
+    border-left: 1px solid var(--hairline);
+    max-height: none;
+
+    & > li > a {
+      display: block;
+      margin-left: -1px;
+      padding: 0.3rem 0 0.3rem 0.85rem;
+      border-left: 2px solid transparent;
+      color: var(--slate);
+      font-size: 0.82rem;
+      font-weight: 500;
+      line-height: 1.35;
+      opacity: 1;
+      text-decoration: none;
+      transition:
+        color 0.15s ease,
+        border-color 0.15s ease;
+
+      &.in-view {
+        color: var(--soft);
+      }
+    }
+
+    /* Текущий раздел — последний из тех, что уже прокрутили */
+    & > li:has(> a.in-view):not(:has(~ li > a.in-view)) > a {
+      color: var(--ink);
+      border-left-color: var(--ink);
+    }
+
+    @for $i from 1 through 6 {
+      & .depth-#{$i} > a {
+        padding-left: calc(0.85rem + 0.75rem * #{$i - 1});
+      }
+    }
+  }
+}
+
+@media (hover: hover) {
+  .toc > ul.toc-content > li > a:hover {
+    color: var(--ink);
+  }
+}
+
+/* ---------- Граф связей ---------------------------------------------------- */
+
+.graph {
+  & > h3 {
+    margin-bottom: 0.9rem;
+  }
+
+  & > .graph-outer {
+    height: 260px;
+    margin: 0;
+    background: var(--surface);
+    border: 1px solid var(--hairline);
+    border-radius: 8px;
+
+    & > .global-graph-icon {
+      width: 30px;
+      height: 30px;
+      margin: 0.5rem;
+      padding: 0;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--slate);
+      background: var(--surface);
+      border: 1px solid var(--hairline);
+      border-radius: 4px;
+      opacity: 1;
+      transition:
+        background 0.15s ease,
+        color 0.15s ease,
+        border-color 0.15s ease;
+
+      & > svg {
+        width: 15px;
+        height: 15px;
+      }
+    }
+  }
+
+  & > .global-graph-outer {
+    background: var(--scrim);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+
+    & > .global-graph-container {
+      width: min(1100px, 92vw);
+      height: 82vh;
+      background: var(--surface);
+      border: 1px solid var(--hairline);
+      border-radius: 8px;
+    }
+  }
+}
+
+@media (hover: hover) {
+  .graph > .graph-outer > .global-graph-icon:hover {
+    background: var(--ink);
+    border-color: var(--ink);
+    color: var(--canvas);
+  }
+}
+
+/* ---------- Ссылаются сюда ------------------------------------------------- */
+
+.backlinks {
+  & > h3 {
+    margin-bottom: 0.6rem;
+  }
+
+  & > ul.overflow {
+    margin: 0;
+    max-height: none;
+
+    & > li {
+      border-bottom: 1px solid var(--hairline);
+
+      &.overflow-end {
+        border-bottom: none;
+      }
+
+      & > a {
+        display: block;
+        padding: 0.55rem 0;
+        color: var(--soft);
+        font-size: 0.86rem;
+        font-weight: 500;
+        text-decoration: none;
+        transition: color 0.15s ease;
+      }
+    }
+  }
+}
+
+@media (hover: hover) {
+  .backlinks > ul.overflow > li > a:hover {
+    color: var(--ink);
+  }
+}
+
+/* ---------- Хлебные крошки ------------------------------------------------- */
+
+.breadcrumb-container {
+  margin: 0 0 1.25rem;
+  gap: 0.5rem;
+  text-transform: uppercase;
+  font-size: 0.66rem;
+  letter-spacing: 0.12em;
+  font-weight: 500;
+
+  .breadcrumb-element {
+    gap: 0.5rem;
+
+    a {
+      color: var(--slate);
+      text-decoration: none;
+    }
+
+    p {
+      margin: 0;
+      color: var(--tertiary);
+    }
+  }
+}
+
+@media (hover: hover) {
+  .breadcrumb-container .breadcrumb-element a:hover {
+    color: var(--ink);
+  }
+}
+
+/* ---------- Поиск: модальное окно ------------------------------------------ */
+
+.search > .search-container {
+  background: var(--scrim);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+
+  & > .search-space {
+    width: min(760px, 92vw);
+    margin-top: 8vh;
+
+    & > * {
+      background: var(--surface);
+      border: 1px solid var(--hairline);
+      border-radius: 8px;
+      margin-bottom: 0.75rem;
+    }
+
+    & > .search-bar {
+      height: 56px;
+      padding: 0 1.25rem;
+      font-family: var(--font-sans);
+      font-size: 1.05rem;
+      color: var(--ink);
+
+      &::placeholder {
+        color: var(--tertiary);
+      }
+
+      &:focus,
+      &:focus-visible {
+        border-color: var(--strong);
+        box-shadow: none;
+      }
+    }
+
+    & > .search-layout {
+      max-height: 70vh;
+
+      & > div {
+        height: auto;
+        max-height: 70vh;
+        border-radius: 0;
+      }
+
+      & .highlight {
+        background: var(--ink);
+        color: var(--canvas);
+        border-radius: 2px;
+      }
+
+      & > .results-container .result-card {
+        padding: 0.9rem 1.1rem;
+        border-bottom: 1px solid var(--hairline);
+        transition: background 0.15s ease;
+
+        &:hover,
+        &:focus,
+        &.focus {
+          background: var(--hover);
+        }
+
+        & > h3 {
+          font-size: 0.95rem;
+          text-transform: none;
+          letter-spacing: 0;
+        }
+
+        & > p.card-description {
+          color: var(--slate);
+          font-size: 0.85rem;
+          margin: 0.25rem 0 0;
+        }
+
+        & > ul.tags {
+          margin-top: 0.5rem;
+        }
+
+        & > ul > li > p {
+          background: transparent;
+          border: 1px solid var(--strong);
+          border-radius: 2px;
+          color: var(--soft);
+          font-size: 0.62rem;
+          font-weight: 500;
+          text-transform: uppercase;
+          letter-spacing: 0.08em;
+          line-height: 1.4;
+          padding: 0.15rem 0.45rem;
+
+          &.match-tag {
+            background: var(--ink);
+            border-color: var(--ink);
+            color: var(--canvas);
+          }
+        }
+      }
+
+      & > .preview-container {
+        border-left: 1px solid var(--hairline);
+        color: var(--soft);
+        padding: 1rem 1.5rem;
+      }
+    }
+  }
+}
+
+/* ---------- Попаповеры ----------------------------------------------------- */
+
+/* Карточка предпросмотра заметки при наведении на ссылку: заголовок, дата,
+   теги и начало текста в уменьшенном кегле. Крошки и якоря заголовков скрыты. */
+.popover {
+  padding: 0.75rem;
+
+  /* Непрозрачная подложка под прокручиваемой карточкой: Chrome рисует фон
+     скроллера вместе с содержимым, и при отскоке скролла он уезжал, оставляя
+     рамку над просвечивающей страницей. Подложка это закрывает. */
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0.75rem;
+    background: var(--surface);
+    border-radius: 8px;
+  }
+
+  & > .popover-inner {
+    position: relative;
+    width: 26rem;
+    max-height: 22rem;
+    padding: 1.1rem 1.25rem 1.25rem;
+    background: var(--surface);
+    border: 1px solid var(--hairline);
+    border-radius: 8px;
+    color: var(--soft);
+    font-size: 0.86rem;
+    line-height: 1.55;
+    user-select: text;
+    /* Без отскока на краях: содержимое не тянется за границу карточки */
+    overscroll-behavior: none;
+  }
+
+  .breadcrumb-container,
+  a[role="anchor"],
+  .clipboard-button {
+    display: none !important;
+  }
+
+  .page-header {
+    margin: 0 0 0.75rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--hairline);
+  }
+
+  .article-title {
+    font-size: 1.05rem;
+    margin: 0 0 0.4rem;
+    line-height: 1.15;
+  }
+
+  .content-meta {
+    margin: 0;
+    font-size: 0.66rem;
+  }
+
+  .tags {
+    margin: 0.6rem 0 0;
+    gap: 0.3rem;
+  }
+
+  a.internal.tag-link {
+    font-size: 0.58rem;
+    padding: 0.15rem 0.4rem;
+  }
+
+  article {
+    & > :first-child {
+      margin-top: 0;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      font-size: 0.82rem;
+      margin: 1.25em 0 0.4em;
+      letter-spacing: 0.02em;
+    }
+
+    p,
+    li {
+      line-height: 1.55;
+      margin: 0.5em 0;
+    }
+
+    pre,
+    :not(pre) > code {
+      font-size: 0.78em;
+    }
+
+    table {
+      font-size: 0.8rem;
+    }
+
+    img {
+      max-width: 100%;
+    }
+
+    .b-hero-title {
+      font-size: 1.6rem;
+    }
+
+    .b-actions {
+      gap: 0.4rem;
+    }
+
+    a.b-btn {
+      min-height: 32px;
+      padding: 0 0.75rem;
+      font-size: 0.62rem;
+    }
+  }
+}
+
+/* ---------- Теги: контурные бейджи, ховер — инверсия ----------------------- */
+
+.tags {
+  gap: 0.4rem;
+  margin: 0.75rem 0 0;
+}
+
+a.internal.tag-link,
+article a.internal.tag-link {
+  background: transparent;
+  border: 1px solid var(--strong);
+  border-radius: 2px;
+  color: var(--soft);
+  text-transform: uppercase;
+  font-size: 0.62rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  line-height: 1.4;
+  padding: 0.2rem 0.5rem;
+  margin: 0;
+  text-decoration: none;
+
+  &::before {
+    content: "";
+  }
+}
+
+@media (hover: hover) {
+  a.internal.tag-link:hover,
+  article a.internal.tag-link:hover {
+    background: var(--ink);
+    color: var(--canvas);
+    border-color: var(--ink);
+  }
+}
+
+/* ---------- Код ------------------------------------------------------------ */
+
+pre,
+code {
+  font-family: var(--font-mono);
+  /* Лигатуры JetBrains Mono превращают !== в ≢ — в коде символы должны быть как набраны */
+  font-variant-ligatures: none;
+}
+
+pre {
+  position: relative;
+  border: 1px solid var(--hairline);
+  border-radius: 6px;
+  background: var(--inset);
+}
+
+figure[data-rehype-pretty-code-figure] > [data-rehype-pretty-code-title] {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--slate);
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-bottom: none;
+  border-radius: 6px 6px 0 0;
+  padding: 0.45rem 0.9rem;
+}
+
+figure[data-rehype-pretty-code-figure] > [data-rehype-pretty-code-title] + pre {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  margin-top: 0;
+}
+
+:not(pre) > code {
+  background: var(--inset);
+  border: 1px solid var(--hairline);
+  border-radius: 4px;
+  color: var(--ink);
+  font-size: 0.85em;
+  padding: 0.1em 0.35em;
+}
+
+/* Кнопка копирования: квадрат в правом верхнем углу, показывается при наведении */
+.clipboard-button {
+  top: 0.5rem;
+  right: 0.5rem;
+  width: 30px;
+  height: 30px;
+  margin: 0;
+  padding: 0;
+  float: none;
+  align-items: center;
+  justify-content: center;
+  color: var(--tertiary);
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-radius: 4px;
+  opacity: 1;
+  transition:
+    background 0.15s ease,
+    color 0.15s ease,
+    border-color 0.15s ease;
+
+  & > svg {
+    width: 15px;
+    height: 15px;
+    fill: none;
+    filter: none;
+  }
+
+  &.copied {
+    background: var(--ink);
+    border-color: var(--ink);
+    color: var(--canvas);
+  }
+}
+
+@media (hover: hover) {
+  .clipboard-button:hover {
+    border-color: var(--strong);
+    color: var(--ink);
+  }
+}
+
+/* ---------- Таблицы: радиус 8, зебра --------------------------------------- */
+
+.table-container > table,
+article table {
+  border: 1px solid var(--hairline);
+  border-radius: 8px;
+  border-collapse: separate;
+  border-spacing: 0;
+  overflow: hidden;
+  font-variant-numeric: tabular-nums;
+  margin: 1rem 0;
+  padding: 0;
+
+  & > * {
+    line-height: 1.5;
+  }
+
+  th {
+    background: var(--inset);
+    color: var(--slate);
+    text-transform: uppercase;
+    font-size: 0.66rem;
+    letter-spacing: 0.12em;
+    font-weight: 500;
+    border-bottom: 1px solid var(--hairline);
+    padding: 0.6rem 1rem;
+  }
+
+  td {
+    border-bottom: 1px solid var(--hairline);
+    padding: 0.6rem 1rem;
+    color: var(--soft);
+  }
+
+  tr {
+    border-bottom: none;
+  }
+
+  tbody tr:nth-child(even) {
+    background: var(--zebra);
+  }
+
+  tr:last-child td {
+    border-bottom: none;
+  }
+}
+
+@media (hover: hover) {
+  article table tbody tr:hover {
+    background: var(--hover);
+  }
+}
+
+/* ---------- Выноски: один вид на все типы (callouts.scss) ------------------ */
+
+.callout {
+  padding: 0 1.1rem;
+
+  & > .callout-title {
+    color: var(--ink);
+
+    .callout-title-inner > p {
+      color: var(--ink);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      font-size: 0.78rem;
+      font-weight: 600;
+    }
+  }
+
+  & > .callout-content {
+    color: var(--soft);
+  }
+}
+
+/* ---------- Цитаты: линия 2px ink, без курсива ----------------------------- */
+
+blockquote {
+  border-left: 2px solid var(--ink);
+  background: transparent;
+  color: var(--soft);
+  font-style: normal;
+  padding-left: 1.1rem;
+}
+
+/* ---------- Задачи: контур strong, выполненная — инверсия ------------------ */
+
+input[type="checkbox"] {
+  border: 1px solid var(--strong);
+  border-radius: 4px;
+  background-color: transparent;
+  cursor: pointer;
+
+  &:checked {
+    border-color: var(--ink);
+    background-color: var(--ink);
+
+    &::after {
+      border-color: var(--canvas);
+    }
+  }
+}
+
+li:has(> input[type="checkbox"]:checked) {
+  color: var(--slate);
+  text-decoration: line-through;
+  text-decoration-color: var(--strong);
+}
+
+/* ---------- Сноски, изображения, формулы ----------------------------------- */
+
+.footnotes {
+  border-top: 1px solid var(--hairline);
+  color: var(--slate);
+  font-size: 0.9rem;
+}
+
+article img {
+  border: 1px solid var(--hairline);
+  border-radius: 8px;
+}
+
+.katex {
+  color: var(--ink);
+}
+
+/* ---------- Навигационный прогресс SPA ------------------------------------- */
+
+.navigation-progress {
+  background: var(--ink);
+  height: 2px;
+}
+
+/* ---------- Списки заметок: главная, теги, папки ---------------------------
+   Строка: дата моно слева, название, теги справа. Разделитель — hairline.
+   -------------------------------------------------------------------------- */
+
+.recent-notes > h3 {
+  margin-bottom: 0.25rem;
+}
+
+ul.section-ul,
+ul.recent-ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--hairline);
+}
+
+li.section-li,
+li.recent-li {
+  margin: 0;
+  padding: 0;
+  border-bottom: 1px solid var(--hairline);
+
+  & > .section {
+    display: grid;
+    grid-template-columns: 7.5rem minmax(0, 1fr) auto;
+    align-items: baseline;
+    column-gap: 1.25rem;
+    padding: 0.95rem 0;
+    transition: background 0.15s ease;
+
+    & > .meta {
+      grid-column: 1;
+      grid-row: 1;
+      margin: 0;
+      opacity: 1;
+      white-space: nowrap;
+    }
+
+    & > .desc {
+      grid-column: 2;
+      grid-row: 1;
+      min-width: 0;
+    }
+
+    & > .tags {
+      grid-column: 3;
+      grid-row: 1;
+    }
+
+    & > .desc > h3 {
+      margin: 0;
+      font-size: 1rem;
+      letter-spacing: -0.01em;
+      line-height: 1.3;
+      text-transform: none;
+
+      & > a,
+      & > a.internal {
+        color: var(--ink);
+        font-weight: 600;
+        text-decoration: none;
+        background: none;
+        padding: 0;
+        border-radius: 2px;
+      }
+    }
+
+    & > .tags {
+      margin: 0;
+      justify-content: flex-end;
+    }
+  }
+}
+
+@media (hover: hover) {
+  li.section-li > .section > .desc > h3 > a:hover,
+  li.recent-li > .section > .desc > h3 > a:hover {
+    background: var(--ink);
+    color: var(--canvas);
+  }
+}
+
+@media all and ($mobile) {
+  li.section-li > .section,
+  li.recent-li > .section {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: 0.35rem;
+
+    & > .meta {
+      grid-row: 2;
+    }
+
+    & > .desc {
+      grid-column: 1;
+      grid-row: 1;
+    }
+
+    & > .tags {
+      grid-column: 1;
+      grid-row: 3;
+      justify-content: flex-start;
+    }
+  }
+}
+
+.page-listing > p {
+  color: var(--slate);
+  text-transform: uppercase;
+  font-size: 0.66rem;
+  letter-spacing: 0.12em;
+  font-weight: 500;
+  margin: 0 0 0.5rem;
+}
+
+/* ---------- Футер ---------------------------------------------------------- */
+
+.site-footer {
+  border-top: 1px solid var(--hairline);
+  background: var(--canvas);
+}
+
+.site-footer-inner {
+  max-width: var(--shell-max);
+  margin: 0 auto;
+  padding: 1.5rem var(--shell-pad);
+  display: flex;
+  align-items: center;
+  gap: 1.5rem 2.5rem;
+  flex-wrap: wrap;
+}
+
+.site-footer-mark {
+  margin: 0;
+  color: var(--ink);
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+}
+
+.site-footer-links {
+  flex: 1 1 auto;
+
+  li a {
+    color: var(--slate);
+    text-transform: uppercase;
+    font-size: 0.66rem;
+    letter-spacing: 0.12em;
+    font-weight: 500;
+    text-decoration: none;
+    padding: 0.2rem 0;
+    border-bottom: 1px solid transparent;
+    transition:
+      color 0.15s ease,
+      border-color 0.15s ease;
+  }
+}
+
+.site-footer-copy {
+  margin: 0;
+  color: var(--tertiary);
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 0.66rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+@media (hover: hover) {
+  .site-footer-links li a:hover {
+    color: var(--ink);
+    border-bottom-color: var(--ink);
+  }
+}
+
+/* ============================================================
+   Компоненты лендинга и Markdown-кнопки (canon §9.27)
+   ============================================================ */
+
+.b-label {
+  display: block;
+  margin: 0 0 0.75rem;
+  letter-spacing: 0.16em;
+}
+
+.b-hero {
+  padding: 2rem 0 3rem;
+  border-bottom: 1px solid var(--hairline);
+
+  .b-hero-title {
+    font-size: clamp(2.6rem, 9vw, 4.8rem);
+    line-height: 0.95;
+    margin: 0 0 1.5rem;
+    text-transform: uppercase;
+    letter-spacing: -0.03em;
+    font-weight: 700;
+    color: var(--ink);
+  }
+
+  .b-hero-sub {
+    max-width: 34rem;
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: var(--soft);
+    margin: 0 0 2rem;
+  }
+}
+
+.b-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+article a.b-btn,
+article a.internal.b-btn,
+article a.external.b-btn,
+a.b-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 44px;
+  padding: 0 1.1rem;
+  border-radius: 4px;
+  text-transform: uppercase;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  text-decoration: none;
+  background: transparent;
+  border: 1px solid var(--strong);
+  color: var(--ink);
+  transition:
+    border-color 0.15s ease,
+    background 0.15s ease,
+    color 0.15s ease;
+
+  svg {
+    width: 14px;
+    height: 14px;
+    stroke-width: 2;
+  }
+}
+
+article a.b-btn--primary,
+article a.internal.b-btn--primary,
+article a.external.b-btn--primary,
+a.b-btn--primary {
+  background: var(--ink);
+  color: var(--canvas);
+  border-color: var(--ink);
+}
+
+@media (hover: hover) {
+  article a.b-btn:hover,
+  article a.internal.b-btn:hover,
+  article a.external.b-btn:hover {
+    border-color: var(--ink);
+    background: transparent;
+    color: var(--ink);
+    text-decoration: none;
+  }
+
+  article a.b-btn--primary:hover,
+  article a.internal.b-btn--primary:hover,
+  article a.external.b-btn--primary:hover {
+    background: var(--soft);
+    border-color: var(--soft);
+    color: var(--canvas);
+  }
+}
+
+.b-section {
+  padding: 2.5rem 0;
+  border-bottom: 1px solid var(--hairline);
+
+  &:last-of-type {
+    border-bottom: none;
+  }
+
+  h2 {
+    margin-top: 0;
+  }
+}
+
+.b-card {
+  display: block;
+  max-width: 100%;
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin: 1rem 0;
+  color: var(--ink);
+  transition: border-color 0.15s ease;
+
+  h3.b-card-title {
+    margin: 0.8rem 0 0.6rem;
+    font-size: 1.35rem;
+
+    a,
+    a.internal,
+    a.external {
+      background: none;
+      padding: 0;
+      color: var(--ink);
+      text-decoration: none;
+    }
+  }
+
+  p.b-card-text {
+    color: var(--soft);
+    margin: 0 0 1.2rem;
+    line-height: 1.55;
+  }
+}
+
+@media (hover: hover) {
+  .b-card:hover {
+    border-color: var(--strong);
+  }
+
+  .b-card h3.b-card-title a:hover {
+    background: var(--ink);
+    color: var(--canvas);
+  }
+}
+
+article a.b-card-cta,
+article a.internal.b-card-cta,
+article a.external.b-card-cta,
+a.b-card-cta {
+  display: inline-flex;
+  align-items: center;
+  min-height: 36px;
+  padding: 0 0.9rem;
+  background: transparent;
+  border: 1px solid var(--strong);
+  border-radius: 4px;
+  color: var(--ink);
+  text-decoration: none;
+  text-transform: uppercase;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  transition:
+    background 0.15s ease,
+    color 0.15s ease,
+    border-color 0.15s ease;
+}
+
+@media (hover: hover) {
+  article a.b-card-cta:hover {
+    background: var(--ink);
+    color: var(--canvas);
+    border-color: var(--ink);
+  }
+}
+
+.b-badge {
+  display: inline-block;
+  background: var(--ink);
+  color: var(--canvas);
+  border: 1px solid var(--ink);
+  border-radius: 2px;
+  padding: 0.2rem 0.5rem;
+  text-transform: uppercase;
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  line-height: 1.3;
+}
+
+.b-badge--outline {
+  background: transparent;
+  color: var(--soft);
+  border-color: var(--strong);
+}
+
+.b-links {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--hairline);
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--surface);
+  margin: 1rem 0;
+
+  a,
+  a.internal,
+  a.external {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.35rem 1rem;
+    min-width: 0;
+    padding: 0.9rem 1.2rem;
+    text-decoration: none;
+    background: transparent;
+    color: var(--ink);
+    border-bottom: 1px solid var(--hairline);
+    border-radius: 0;
+    font-weight: 500;
+    transition: background 0.15s ease;
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    span {
+      color: var(--slate);
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+  }
+}
+
+@media (hover: hover) {
+  article .b-links a:hover {
+    background: var(--hover);
+    color: var(--ink);
+  }
+}
+
+/* Иконка внешней ссылки нужна в тексте, но не внутри кнопок, карточек и строк */
+.b-btn .external-icon,
+.b-card .external-icon,
+.b-card-cta .external-icon,
+.b-links .external-icon {
+  display: none;
+}
+
+/* ---------- Движение: появление fade + подъём ------------------------------ */
+
+@media (prefers-reduced-motion: no-preference) {
+  .b-hero,
+  .b-section {
+    animation: b-rise 0.3s ease both;
+  }
+
+  .b-section:nth-of-type(2) {
+    animation-delay: 0.05s;
+  }
+
+  .b-section:nth-of-type(3) {
+    animation-delay: 0.1s;
+  }
+}
+
+@keyframes b-rise {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ---------- Главная: hero вместо заголовка статьи --------------------------- */
+
+[data-slug="index"] {
+  .content-meta,
+  .article-title,
+  .backlinks {
+    display: none;
+  }
+
+  .page-footer {
+    margin-top: 3rem;
+  }
+}
+
+/* ---------- 404 ------------------------------------------------------------ */
+
+[data-slug="404"] article {
+  padding: 3rem 0;
+
+  h1 {
+    font-family: var(--font-mono);
+    font-size: clamp(4rem, 14vw, 7rem);
+    letter-spacing: -0.04em;
+    margin: 0 0 1rem;
+  }
+
+  p {
+    color: var(--slate);
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.12em;
+  }
+}
+
+/* ---------- Печать: третий набор токенов (canon §41) ----------------------- */
+
+@media print {
+  :root,
+  :root[data-theme="obsidian"],
+  :root[data-theme="titan"] {
+    --canvas: #fff;
+    --inset: #f2f2f2;
+    --surface: #fff;
+    --hover: #fff;
+    --zebra: #fafafa;
+    --hairline: #bbb;
+    --strong: #666;
+    --slate: #444;
+    --tertiary: #666;
+    --soft: #222;
+    --ink: #000;
+    --light: #fff;
+    --lightgray: #bbb;
+    --gray: #444;
+    --darkgray: #222;
+    --dark: #000;
+    --secondary: #000;
+    --highlight: #f2f2f2;
+  }
+
+  @page {
+    margin: 14mm 12mm;
+  }
+
+  body {
+    font-size: 10pt;
+  }
+
+  * {
+    print-color-adjust: exact !important;
+  }
+
+  .site-header,
+  .site-footer,
+  .sidebar,
+  .page-footer,
+  .clipboard-button,
+  .skip-link,
+  .navigation-progress {
+    display: none !important;
+  }
+
+  .site-body {
+    display: block;
+  }
+
+  article a.external::after {
+    content: " (" attr(href) ")";
+    color: var(--slate);
+    font-size: 0.85em;
+  }
+}
+
+@include offbrand.apply;
