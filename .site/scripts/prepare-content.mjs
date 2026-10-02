@@ -15,6 +15,8 @@ const excluded = new Set([
   ".trash",
   "node_modules",
   "Шаблоны",
+  // Temporarily hidden on the website; original notes stay in the vault.
+  "Дневник",
 ])
 const excludedFiles = new Set([
   "README.md",
@@ -66,6 +68,11 @@ export async function prepareContent({ clean = true } = {}) {
         if (entry.name.toLowerCase().endsWith(".canvas")) canvases.push({ rel, content })
         if (entry.name.toLowerCase().endsWith(".md")) {
           const parsed = matter(content.toString("utf8"))
+          // Keep labels readable without linking to temporarily unpublished diary pages.
+          parsed.content = parsed.content.replace(
+            /\[\[Дневник\/([^\]|]+)(?:\|([^\]]+))?\]\]/g,
+            (_, name, label) => label ?? path.basename(name),
+          )
           const name = path.basename(rel, path.extname(rel))
           // Obsidian keeps its readable Markdown heading; Quartz renders the title itself.
           const heading = parsed.content.match(/^# ([^\n]+)\n/m)

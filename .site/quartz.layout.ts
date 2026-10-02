@@ -27,16 +27,6 @@ export const sharedPageComponents: SharedLayout = {
       }),
       condition: (page) => isIndex(page.fileData.slug),
     }),
-    Component.ConditionalRender({
-      component: Component.RecentNotes({
-        title: "Из дневника",
-        limit: 3,
-        showTags: true,
-        pinned: ["Дневник/Иерархия-дохода"],
-        filter: (f) => Boolean(f.slug?.startsWith("Дневник/")),
-      }),
-      condition: (page) => isIndex(page.fileData.slug),
-    }),
   ],
   footer: Component.Footer({
     links: {
