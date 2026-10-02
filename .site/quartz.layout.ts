@@ -47,7 +47,12 @@ export const defaultContentPageLayout: PageLayout = {
     Component.ContentMeta({ showComma: false }),
     Component.TagList(),
   ],
-  left: [Component.Explorer({ title: "Разделы", folderDefaultState: "open", folderClickBehavior: "collapse" })],
+  left: [Component.Explorer({
+    title: "Разделы",
+    folderDefaultState: "open",
+    folderClickBehavior: "collapse",
+    filterFn: (node) => node.slugSegment !== "tags" && node.slugSegment !== "Дневник",
+  })],
   right: [
     Component.DesktopOnly(Component.TableOfContents()),
     Component.Graph({
@@ -65,7 +70,12 @@ export const defaultListPageLayout: PageLayout = {
     Component.ArticleTitle(),
     Component.ContentMeta({ showComma: false }),
   ],
-  left: [Component.Explorer({ title: "Разделы", folderDefaultState: "open", folderClickBehavior: "collapse" })],
+  left: [Component.Explorer({
+    title: "Разделы",
+    folderDefaultState: "open",
+    folderClickBehavior: "collapse",
+    filterFn: (node) => node.slugSegment !== "tags" && node.slugSegment !== "Дневник",
+  })],
   // Страницы папок и тегов не входят в граф — правая колонка пустая
   right: [],
 }
